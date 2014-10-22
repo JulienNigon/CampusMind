@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BlackBox>
+
+	<Inputs>
+		<Input Name="Input_Alpha" DefaultValue="200.0">
+			<Target Name="Function_Alpha"></Target>
+			<Target Name="Function_Beta"></Target>
+		</Input>
+		<Input Name="Input_Beta" DefaultValue="100.0">
+			<Target Name="Function_Alpha"></Target>
+		</Input>
+	</Inputs>
+		
+	<Outputs>
+		<Output Name="Output_Alpha" DefaultValue="12.4"></Output>
+		<Output Name="Output_Beta" DefaultValue="0"></Output>	
+	</Outputs>
+	
+	<Functions>
+		<Function Name="Function_Alpha" Func="PLUS">
+			<Target Name="Output_Alpha"></Target>
+			<InputA Name="Input_Alpha"></InputA>
+			<InputB Name="Input_Beta"></InputB></Function>
+			
+		<Function Name="Function_Beta" Func="PLUS">
+			<Target Name="Output_Beta"></Target>
+			<Target Name="Function_Beta"></Target>
+			<InputA Name="Input_Alpha"></InputA>
+			<InputB Name="Function_Beta"></InputB></Function>
+	</Functions>
+			
+</BlackBox>
