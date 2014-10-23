@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import javax.swing.SwingUtilities;
 
 import view.system.MainPanel;
+import view.system.MainTabbedPanel;
 
 import agents.Agent;
 

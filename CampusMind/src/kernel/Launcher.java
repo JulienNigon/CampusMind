@@ -14,6 +14,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import org.jdom2.*;
 
 import view.system.MainPanel;
+import view.system.MainTabbedPanel;
 
 import blackbox.BlackBox;
 

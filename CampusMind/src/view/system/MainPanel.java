@@ -1,60 +1,41 @@
 package view.system;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Frame;
+import java.awt.Button;
 
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 
+import kernel.Config;
 import kernel.World;
 
-public class MainPanel extends JTabbedPane{
-
-	private World world;
-	private BlackBoxPanel blackBoxPanel;
-	private SystemPanel systemPanel;
+public class MainPanel extends JPanel{
 	
 	private JToolBar toolBar;
 	private JButton buttonPauseStart;
+	
+	private MainTabbedPanel tabbedPanel;
 
+	
 	public MainPanel() {
-		super();
-
-	}
-
-	public World getWorld() {
-		return world;
-	}
-
-	public void setWorld(World world) {
-		this.world = world;
 		
+		this.setLayout(new BorderLayout());
 		toolBar = new JToolBar();
-		buttonPauseStart = new JButton("test");
+		buttonPauseStart = new JButton(Config.getIcon("arrow.png"));
 		toolBar.add(buttonPauseStart);
-		this.add(toolBar);
+		this.add(toolBar,BorderLayout.NORTH);  // TODO ugly tool bar
+		this.tabbedPanel = new MainTabbedPanel();
+		this.add(tabbedPanel,BorderLayout.CENTER);
 		
 		
-		blackBoxPanel = new BlackBoxPanel(world);
-		systemPanel = new SystemPanel(world);
-	//	new JScrollPane(panelGroupManager,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS), BorderLayout.CENTER
-		this.addTab("BlackBox", new JScrollPane(blackBoxPanel,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS));
-		this.addTab("System", new JScrollPane(systemPanel,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS));
-		this.addTab("Context", new JPanel());
-
-		((Frame) this.getTopLevelAncestor()).pack();
+	}
+	
+	public void setWorld(World world) {
+		tabbedPanel.setWorld(world);
 	}
 	
 	public void update() {
-		blackBoxPanel.update();
-		systemPanel.update();
-		world.getScheduler().setWaitForGUIUpdate(false);
+		tabbedPanel.update();
 	}
-	
-	
 }
