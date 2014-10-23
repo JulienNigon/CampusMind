@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import ncs.NCS;
+
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
@@ -13,7 +15,6 @@ import org.jdom2.input.SAXBuilder;
 import blackbox.BlackBox;
 import blackbox.BlackBoxAgent;
 import blackbox.Input;
-
 import agents.SystemAgent;
 import agents.Variable;
 import agents.Agent;
@@ -28,6 +29,8 @@ public class World {
 	BlackBox blackbox;
 	
 	private HashMap<String,SystemAgent> agents = new HashMap<String,SystemAgent>();
+	private HashMap<NCS,Integer> allNCS = new HashMap<NCS,Integer>();
+	private HashMap<NCS,Integer> thidLoopNCS = new HashMap<NCS,Integer>();
 
 	
 	public World (Scheduler scheduler, File systemFile, BlackBox blackbox) {
@@ -136,6 +139,22 @@ public class World {
 	public void startAgent(SystemAgent a) {
 		scheduler.registerAgent(a);	   
     	agents.put(a.getName(), a);
+	}
+
+	public HashMap<NCS, Integer> getAllNCS() {
+		return allNCS;
+	}
+
+	public void setAllNCS(HashMap<NCS, Integer> allNCS) {
+		this.allNCS = allNCS;
+	}
+
+	public HashMap<NCS, Integer> getThidLoopNCS() {
+		return thidLoopNCS;
+	}
+
+	public void setThidLoopNCS(HashMap<NCS, Integer> thidLoopNCS) {
+		this.thidLoopNCS = thidLoopNCS;
 	}
 
 

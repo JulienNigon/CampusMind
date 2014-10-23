@@ -12,7 +12,12 @@ public enum CriticityType {
 			//System.out.println("Seuil : " + (Math.log10(Math.max(0,value-ref)) - 1));
 			//System.out.println("ref : " + ref);
 			return between0_100(Math.log10(Math.max(0,value-ref)) - 1);
-
+			
+		case HIGHER:
+			//System.out.println("Seuil : " + (Math.log10(Math.max(0,value-ref)) - 1));
+			//System.out.println("ref : " + ref);
+			return between0_100(Math.log10(Math.max(0,-1*(value-ref))) - 1);
+			
 		default:
 			return 0;
 

@@ -7,6 +7,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import view.animation.JJPanel;
+
+import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JSplitPane;
 import javax.swing.JDesktopPane;
@@ -18,9 +20,9 @@ import javax.swing.table.DefaultTableModel;
 import agents.SystemAgent;
 import agents.Variable;
 import agents.controler.Controller;
+import agents.criterion.Criterion;
 import blackbox.BlackBox;
 import blackbox.BlackBoxAgent;
-
 import kernel.World;
 
 public class SystemPanel extends JPanel{
@@ -46,6 +48,8 @@ public class SystemPanel extends JPanel{
 		
 		JTable table = new JTable(tableModel);
 		splitPane_1.setRightComponent(table);
+		table.setDefaultRenderer(Object.class, new JTableRenderer_Agents());
+
 		
 	}
 	
@@ -64,11 +68,15 @@ public class SystemPanel extends JPanel{
 			data[0] = a.getClass().getSimpleName();
 			data[1] = a.getName();
 			data[2] = a.getID();
+			data[3] = a.getMessagesBin();
 			if (a instanceof Controller) {
-				data[3] = ((Controller) a).getBestContext();
+				data[4] = ((Controller) a).getBestContext();
 			}
 			if (a instanceof Variable) {
-				data[3] = ((Variable) a).getValue();
+				data[4] = ((Variable) a).getValue();
+			}
+			if (a instanceof Criterion) {
+				data[4] = ((Criterion) a).getCriticity();
 			}
 			tableModel.addRow(data);
 		}

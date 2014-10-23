@@ -20,14 +20,14 @@ public class Context extends SystemAgent{
 	private HashMap<Variable,Range> ranges = new HashMap<Variable,Range>();
 	private HashMap<Criterion,Double> predictions = new HashMap<Criterion,Double>();
 	private Controller controller;
-	private double action;
+	private double action = -1.1;
 	
 	public Context(World world, Controller controller) {
 		super(world);
 		this.controller = controller;
 		ArrayList<Variable> var = (ArrayList<Variable>) world.getAllAgentInstanceOf(Variable.class);
 		for (Variable v : var) {
-			ranges.put(v, new Range(v.getValue()-10,v.getValue()+10)); //TODO start range
+			ranges.put(v, new Range(v.getValue()-1000,v.getValue()+1000)); //TODO start range
 			sendMessage(null,MessageType.REGISTER,v);
 //			System.out.println("REQUEST SEND");
 		}

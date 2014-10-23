@@ -28,7 +28,10 @@ public class Controller extends SystemAgent{
 
 	@Override
 	public void computeAMessage(Message m) {
+		//contexts.clear();
+
 		if (m.getType() == MessageType.PROPOSAL) { //Value useless
+			System.out.println("add  a context " + contexts.size());
 			contexts.add((Context) m.getSender());
 		}
 		if (m.getType() == MessageType.VALUE) { //Criterion
@@ -43,11 +46,9 @@ public class Controller extends SystemAgent{
 	}
 	
 	public void play() {
-		contexts.clear();
-		criticalCriterion = null;
 		bestContext = null;
 		super.play();
-		
+		System.out.println("context size : " + contexts.size());
 		if (contexts.size() > 0) selectBestContext();
 		if (bestContext != null) {
 		//	System.out.println("Messages reçus! " + criticalCriterion.getName());
@@ -64,8 +65,9 @@ public class Controller extends SystemAgent{
 			context.setName(String.valueOf(context.hashCode()));
 			world.startAgent(context);
 		}
-		
-		
+		contexts.clear();
+		criticalCriterion = null;
+
 		
 	}
 
@@ -92,6 +94,8 @@ public class Controller extends SystemAgent{
 				bc = context;
 			}
 		}
+		bestContext = bc;
+		System.out.println("The best context is : " + bestContext.getName());
 	}
 
 	public Context getBestContext() {

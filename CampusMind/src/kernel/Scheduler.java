@@ -20,6 +20,7 @@ public class Scheduler {
 	private int nextID = 0;
 	private MainPanel view;
 	private boolean waitForGUIUpdate = false;
+	private boolean playOneStep = false;
 	
 	public Scheduler() {
 		agents = new ArrayList<Agent>();
@@ -29,44 +30,65 @@ public class Scheduler {
 		waitList.add(a);
 	}
 	
-	public void start() {
-		running = true;
+	public void start(boolean running) {
+		this.running = running;
 		run();
 	}
 	
 	private void run() {
-		while (running) {
+		while(true){
 			
-			for (Agent a : waitList) {
-				a.setID(nextID);
-				nextID++;
-				int i = 0;
-				while (i < agents.size() && agents.get(i).getClass() != a.getClass()) i++;
-				agents.add(i,a);
+			if (!running) {
+			    try {
+			        Thread.sleep(1);
+			    } catch (InterruptedException ignore) {
+			    }
 			}
-			waitList.clear();
+			
+			while (running) {
+				
+				for (Agent a : waitList) {
+					a.setID(nextID);
+					nextID++;
+					int i = 0;
+					while (i < agents.size() && agents.get(i).getClass() != a.getClass()) i++;
+					agents.add(i,a);
+				}
+				waitList.clear();
 
-			for (Agent agent : agents) {
-				agent.play();
-			}
+				//Compute message
+				for (Agent agent : agents) {
+					agent.readMessage();
+				}
+				
+				//Act
+				for (Agent agent : agents) {
+					agent.play();
+				}
 
-			if (view != null) {
-				try {
-					SwingUtilities.invokeAndWait(new Runnable() {
-						public void run() {
-							view.update();
-						}
-					});
-				} catch (InvocationTargetException | InterruptedException e) {
-					e.printStackTrace();
+				if (view != null) {
+					try {
+						SwingUtilities.invokeAndWait(new Runnable() {
+							public void run() {
+								view.update();
+							}
+						});
+					} catch (InvocationTargetException | InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+				
+				tick++;
+				if (playOneStep) {
+					playOneStep = false;
+					running = false;
 				}
 			}
 
-			tick++;
-			// if (tick == 15) System.exit(0);
-		}
-
+				// if (tick == 15) System.exit(0);
+			}
 		
+	
 	}
 	
 	public void killAgent(Agent a) {
@@ -119,6 +141,12 @@ public class Scheduler {
 
 	public void setWaitForGUIUpdate(boolean waitForGUIUpdate) {
 		this.waitForGUIUpdate = waitForGUIUpdate;
+	}
+
+	public void playOneStep() {
+		setRunning(true);
+		playOneStep = true;
+		
 	}
 	
 	

@@ -13,10 +13,11 @@ public abstract class Agent {
 	private int ID;
 	private String name;
 	private Stack<Message> messages = new Stack<Message>();
-	
+	private Stack<Message> messagesBin = new Stack<Message>();
+
 
 	public void play() {
-		readMessage();
+	//	readMessage();
 		//System.out.println("ID :" + ID + " is playing. My name is : " + name);
 	}
 
@@ -57,11 +58,24 @@ public abstract class Agent {
 	}
 
 	public void readMessage() {
+		messagesBin.clear();
 		while (!messages.isEmpty()) {
-			computeAMessage(messages.pop());
+			Message m = messages.pop();
+			computeAMessage(m);
+			messagesBin.push(m);
 		}
 	}
 	
+	
+	
+	public Stack<Message> getMessagesBin() {
+		return messagesBin;
+	}
+
+	public void setMessagesBin(Stack<Message> messagesBin) {
+		this.messagesBin = messagesBin;
+	}
+
 	public abstract void computeAMessage (Message m);
 
 }

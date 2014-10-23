@@ -9,8 +9,10 @@
 		<Controller Name="Controller_Alpha" InputTarget="Input_Alpha"></Controller>
 		<Controller Name="Controller_Beta" InputTarget="Input_Beta"></Controller>
 
-		<Criterion Name="Criterion_Beta" Reference="1000" CriticityType="LOWER">
+		<Criterion Name="Criterion_Beta" Reference="-500" CriticityType="LOWER">
 			<CriticalVariable Name="Senseur_2"></CriticalVariable></Criterion>
-		
+		<Criterion Name="Criterion_BetaBis" Reference="-600" CriticityType="HIGHER">
+			<CriticalVariable Name="Senseur_2"></CriticalVariable></Criterion>
+			
 	</StartingAgents>
 </System>

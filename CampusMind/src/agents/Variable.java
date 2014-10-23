@@ -25,7 +25,7 @@ public class Variable extends SystemAgent{
 		super.play();
 		value = sensor.getValue();  //TODO real acquisition
 		for (Agent target : targets) {
-			sendMessage(new Message(value,MessageType.VALUE,this),target);
+			sendMessage(value,MessageType.VALUE,target);
 			//System.out.println("Receveur : " + target.getClass().getSimpleName() + targets.size() + target.getName());
 		}
 	}
