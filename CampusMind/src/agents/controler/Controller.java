@@ -31,7 +31,7 @@ public class Controller extends SystemAgent{
 		//contexts.clear();
 
 		if (m.getType() == MessageType.PROPOSAL) { //Value useless
-			System.out.println("add  a context " + contexts.size());
+	//		System.out.println("add  a context " + contexts.size());
 			contexts.add((Context) m.getSender());
 		}
 		if (m.getType() == MessageType.VALUE) { //Criterion
@@ -48,7 +48,7 @@ public class Controller extends SystemAgent{
 	public void play() {
 		bestContext = null;
 		super.play();
-		System.out.println("context size : " + contexts.size());
+	//	System.out.println("context size : " + contexts.size());
 		if (contexts.size() > 0) selectBestContext();
 		if (bestContext != null) {
 		//	System.out.println("Messages reçus! " + criticalCriterion.getName());

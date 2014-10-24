@@ -21,9 +21,11 @@ public class Scheduler {
 	private MainPanel view;
 	private boolean waitForGUIUpdate = false;
 	private boolean playOneStep = false;
+	private World world;
 	
 	public Scheduler() {
 		agents = new ArrayList<Agent>();
+		this.world = world;
 	}
 	
 	public void registerAgent(Agent a) {
@@ -77,6 +79,8 @@ public class Scheduler {
 						e.printStackTrace();
 					}
 				}
+				
+				world.manageWorld();
 				
 				tick++;
 				if (playOneStep) {
@@ -148,6 +152,15 @@ public class Scheduler {
 		playOneStep = true;
 		
 	}
+
+	public World getWorld() {
+		return world;
+	}
+
+	public void setWorld(World world) {
+		this.world = world;
+	}
+	
 	
 	
 

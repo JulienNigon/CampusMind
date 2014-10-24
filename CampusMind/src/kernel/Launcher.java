@@ -59,6 +59,7 @@ public class Launcher {
 		mainPanel.setWorld(world);
 		scheduler.setView(mainPanel);
 		
+		scheduler.setWorld(world);
 		scheduler.start(false);
 
 

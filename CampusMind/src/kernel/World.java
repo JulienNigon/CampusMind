@@ -30,7 +30,7 @@ public class World {
 	
 	private HashMap<String,SystemAgent> agents = new HashMap<String,SystemAgent>();
 	private HashMap<NCS,Integer> allNCS = new HashMap<NCS,Integer>();
-	private HashMap<NCS,Integer> thidLoopNCS = new HashMap<NCS,Integer>();
+	private HashMap<NCS,Integer> thisLoopNCS = new HashMap<NCS,Integer>();
 
 	
 	public World (Scheduler scheduler, File systemFile, BlackBox blackbox) {
@@ -39,6 +39,10 @@ public class World {
 		this.blackbox = blackbox;
 		createStartingAgents(systemFile);
 		
+		for (NCS ncs : NCS.values()) {
+			allNCS.put(ncs, 0);
+			thisLoopNCS.put(ncs, 0);
+		}
 		
 		System.out.println("---End initialize the world---");
 	}
@@ -91,7 +95,9 @@ public class World {
 	}
 	
 	
-	
+	public void manageWorld() {
+		//TODO NCS
+	}
 	
 	
 	
@@ -149,15 +155,17 @@ public class World {
 		this.allNCS = allNCS;
 	}
 
-	public HashMap<NCS, Integer> getThidLoopNCS() {
-		return thidLoopNCS;
+	public HashMap<NCS, Integer> getThisLoopNCS() {
+		return thisLoopNCS;
 	}
 
-	public void setThidLoopNCS(HashMap<NCS, Integer> thidLoopNCS) {
-		this.thidLoopNCS = thidLoopNCS;
+	public void setThisLoopNCS(HashMap<NCS, Integer> thidLoopNCS) {
+		this.thisLoopNCS = thidLoopNCS;
 	}
 
-
+	public void raiseNCS(NCS ncs) {
+		thisLoopNCS.put(ncs, thisLoopNCS.get(ncs) + 1);
+	}
 	
 	
 	
