@@ -41,7 +41,7 @@ public class MainTabbedPanel extends JTabbedPane{
 		systemPanel = new SystemPanel(world);
 	//	new JScrollPane(panelGroupManager,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS), BorderLayout.CENTER
 		this.addTab("BlackBox", new JScrollPane(blackBoxPanel,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS));
-		this.addTab("System", new JScrollPane(systemPanel,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS));
+		this.addTab("System", systemPanel);
 		this.addTab("Context", new JPanel());
 
 		((Frame) this.getTopLevelAncestor()).pack();

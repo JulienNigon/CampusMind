@@ -10,6 +10,7 @@ import view.animation.JJPanel;
 
 import javax.swing.JButton;
 import javax.swing.JList;
+import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JDesktopPane;
 import javax.swing.JTable;
@@ -49,7 +50,7 @@ public class SystemPanel extends JPanel{
 		update();
 		
 		JTable table = new JTable(tableModel);
-		splitPane_1.setRightComponent(table);
+		splitPane_1.setRightComponent(new JScrollPane(table,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS));
 		table.setDefaultRenderer(Object.class, new JTableRenderer_Agents());
 
 		

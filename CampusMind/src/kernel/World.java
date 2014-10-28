@@ -166,6 +166,15 @@ public class World {
 	public void raiseNCS(NCS ncs) {
 		thisLoopNCS.put(ncs, thisLoopNCS.get(ncs) + 1);
 	}
+
+	public void destroy(Class<Context> cl) {
+		for(String key : agents.keySet()) {
+			Agent a = agents.get(key);
+			if (a.getClass().equals(cl)) {
+				scheduler.killAgent(a);
+			}
+		}		
+	}
 	
 	
 	

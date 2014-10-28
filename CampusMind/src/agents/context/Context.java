@@ -81,10 +81,10 @@ public class Context extends SystemAgent{
 		super.play();
 		
 		if (nSelection > 0 && !selected) {
-			if (getRealChange() <= predictions.get(criticalCriterion) + 0.01   //TODO parametrize
-					&& getRealChange() >= predictions.get(criticalCriterion) - 0.01) {
+		//	if (getRealChange() <= predictions.get(criticalCriterion) + 0.01   //TODO parametrize
+		//			&& getRealChange() >= predictions.get(criticalCriterion) - 0.01) {
 				
-			}
+		//	}
 		}
 		
 		if (nSelection >= 2) {

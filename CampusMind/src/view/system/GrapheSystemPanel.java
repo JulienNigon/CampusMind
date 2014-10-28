@@ -33,7 +33,10 @@ public class GrapheSystemPanel extends JPanel{
 	private JButton buttonShowValue;
 	private JButton buttonShowDefault;
 	private JButton buttonShowName;
-	
+	private JButton buttonDestroyContext;
+	private JButton buttonSoftStyle;
+	private JButton buttonStandardStyle;
+
 	private int viewMode = 0;
 
 
@@ -56,11 +59,41 @@ public class GrapheSystemPanel extends JPanel{
 		buttonShowName.addActionListener(e -> {showName();});
 		toolBar.add(buttonShowName);
 		
+		toolBar.addSeparator();
+		
+		buttonSoftStyle = new JButton(Config.getIcon("tag.png"));
+		buttonSoftStyle.addActionListener(e -> {setSoftStyle();});
+		toolBar.add(buttonSoftStyle);
+		
+		buttonStandardStyle = new JButton(Config.getIcon("tag.png"));
+		buttonStandardStyle.addActionListener(e -> {setStandardStyle();});
+		toolBar.add(buttonStandardStyle);
+		
+		toolBar.addSeparator();
+
+		buttonDestroyContext = new JButton(Config.getIcon("eraser.png"));
+		buttonDestroyContext.addActionListener(e -> {destroyContext();});
+		toolBar.add(buttonDestroyContext);
+		
 		this.add(toolBar,BorderLayout.WEST);
 
 		
 		//update();
 		
+	}
+	
+	public void setStandardStyle() {
+		graph.removeAttribute("ui.stylesheet");
+		graph.addAttribute("ui.stylesheet", "url('file:/home/nigon/git/CampusMind/CampusMind/src/styles/styleSystem.css')");
+	}
+	
+	public void setSoftStyle() {
+		graph.removeAttribute("ui.stylesheet");
+		graph.addAttribute("ui.stylesheet", "url('file:/home/nigon/git/CampusMind/CampusMind/src/styles/styleSystemSoft.css')");
+	}
+	
+	public void destroyContext() {
+		world.destroy(Context.class);
 	}
 	
 	public void showValue() {

@@ -1,8 +1,8 @@
 graph {
     fill-color: white;
 }
-node { size-mode: fit; shape: rounded-box; fill-color: white; stroke-mode: plain; padding: 3px, 2px; }
 
+node { text-mode: hidden; }
 
 
 node.Variable {
@@ -26,7 +26,7 @@ edge {
     arrow-shape: arrow;
     stroke-color: grey;
     fill-color: grey;
-    arrow-size: 4px, 3px;
+    arrow-size: 6px, 4px;
 }
 
 edge.validContext {

@@ -19,6 +19,7 @@ public class MainPanel extends JPanel{
 	private JToolBar toolBar;
 	private JButton buttonPauseStart;
 	private JButton buttonPlayOneStep;
+	private JButton buttonExit;
 	
 	private MainTabbedPanel tabbedPanel;
 	private World world;
@@ -29,6 +30,12 @@ public class MainPanel extends JPanel{
 		this.setLayout(new BorderLayout());
 		toolBar = new JToolBar();
 		
+		buttonExit = new JButton(Config.getIcon("cross-circle.png"));
+		buttonExit.addActionListener(e -> {System.exit(0);});
+		toolBar.add(buttonExit);
+		
+		toolBar.addSeparator();
+		
 		buttonPauseStart = new JButton(Config.getIcon("control.png"));
 		buttonPauseStart.addActionListener(e -> {togglePause(!world.getScheduler().isRunning());});
 		toolBar.add(buttonPauseStart);
@@ -36,6 +43,8 @@ public class MainPanel extends JPanel{
 		buttonPlayOneStep = new JButton(Config.getIcon("control-stop.png"));
 		buttonPlayOneStep.addActionListener(e -> {oneStep();});
 		toolBar.add(buttonPlayOneStep);
+		
+		toolBar.addSeparator();
 
 		this.add(toolBar,BorderLayout.NORTH);
 		this.tabbedPanel = new MainTabbedPanel();
