@@ -73,7 +73,7 @@ public class World {
 
 		    	scheduler.registerAgent(a);	   
 		    	agents.put(a.getName(), a);
-		    	((Variable) agents.get(element.getChild("CriticalVariable").getAttributeValue("Name"))).getTargets().add(a);
+		    	((Variable) agents.get(element.getChild("CriticalVariable").getAttributeValue("Name"))).addTarget(a);
 		    }
 		    
 		    //Initialize the controller agents
@@ -85,7 +85,7 @@ public class World {
 		    	scheduler.registerAgent(a);	   
 		    	agents.put(a.getName(), a);
 			    for (Element crit : racine.getChild("StartingAgents").getChildren("Criterion")){
-			    	((Criterion) agents.get(crit.getAttributeValue("Name"))).getControllers().add(a);
+			    	((Criterion) agents.get(crit.getAttributeValue("Name"))).addTarget(a);
 			    }
 		    }
 		    

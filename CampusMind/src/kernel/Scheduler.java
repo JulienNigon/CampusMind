@@ -5,9 +5,9 @@ import java.util.ArrayList;
 
 import javax.swing.SwingUtilities;
 
+import view.system.GrapheSystemPanel;
 import view.system.MainPanel;
 import view.system.MainTabbedPanel;
-
 import agents.Agent;
 
 public class Scheduler {
@@ -22,6 +22,7 @@ public class Scheduler {
 	private boolean waitForGUIUpdate = false;
 	private boolean playOneStep = false;
 	private World world;
+	private GrapheSystemPanel graphSystemPanel;
 	
 	public Scheduler() {
 		agents = new ArrayList<Agent>();
@@ -30,6 +31,7 @@ public class Scheduler {
 	
 	public void registerAgent(Agent a) {
 		waitList.add(a);
+	//	if (graphSystemPanel != null) graphSystemPanel.newAgent(a);
 	}
 	
 	public void start(boolean running) {
@@ -159,6 +161,14 @@ public class Scheduler {
 
 	public void setWorld(World world) {
 		this.world = world;
+	}
+
+	public GrapheSystemPanel getGraphSystemPanel() {
+		return graphSystemPanel;
+	}
+
+	public void setGraphSystemPanel(GrapheSystemPanel graphSystemPanel) {
+		this.graphSystemPanel = graphSystemPanel;
 	}
 	
 	

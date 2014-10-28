@@ -3,9 +3,8 @@ package agents.controler;
 import java.util.ArrayList;
 
 import kernel.World;
-
 import blackbox.Input;
-
+import agents.Agent;
 import agents.SystemAgent;
 import agents.Variable;
 import agents.context.Context;
@@ -56,14 +55,17 @@ public class Controller extends SystemAgent{
 		//	System.out.println(blackBoxInput.getName());
 		//	System.out.println(bestContext.getName());
 
-			blackBoxInput.sendMessage(bestContext.getAction(), MessageType.VALUE, blackBoxInput);
+			sendMessage(bestContext.getAction(), MessageType.VALUE, blackBoxInput);
+			Object[] infos = {criticalCriterion, criticalCriterion.getCriticity()};
+			sendMessage(infos, MessageType.SELECTION, bestContext);
 		}
 		else
 		{
-			blackBoxInput.sendMessage(0.1, MessageType.VALUE, blackBoxInput);  //TODO test only purpose
+			sendMessage(0.1, MessageType.VALUE, blackBoxInput);  //TODO test only purpose
 			Context context = new Context(world, this);
 			context.setName(String.valueOf(context.hashCode()));
 			world.startAgent(context);
+			context.play();  //TODO dirty
 		}
 		contexts.clear();
 		criticalCriterion = null;
@@ -95,7 +97,7 @@ public class Controller extends SystemAgent{
 			}
 		}
 		bestContext = bc;
-		System.out.println("The best context is : " + bestContext.getName());
+		//System.out.println("The best context is : " + bestContext.getName());
 	}
 
 	public Context getBestContext() {
@@ -104,6 +106,11 @@ public class Controller extends SystemAgent{
 
 	public void setBestContext(Context bestContext) {
 		this.bestContext = bestContext;
+	}
+
+	@Override
+	public ArrayList<? extends Agent> getTargets() {
+		return contexts;
 	}
 
 }

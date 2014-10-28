@@ -3,8 +3,8 @@ package agents;
 import java.util.ArrayList;
 
 import kernel.World;
-
 import blackbox.BlackBoxAgent;
+import agents.criterion.Criterion;
 import agents.messages.Message;
 import agents.messages.MessageType;
 
@@ -33,9 +33,7 @@ public class Variable extends SystemAgent{
 	@Override
 	public void computeAMessage(Message m) {
 		if(m.getType() == MessageType.REGISTER) {
-		//	System.out.println("register nex context" + targets.size());
 			targets.add(m.getSender());
-		//	System.out.println(targets.size());
 		}
 	}
 
@@ -55,7 +53,7 @@ public class Variable extends SystemAgent{
 		this.sensor = sensor;
 	}
 
-	public ArrayList<Agent> getTargets() {
+	public ArrayList<? extends Agent> getTargets() {
 		return targets;
 	}
 
@@ -63,8 +61,11 @@ public class Variable extends SystemAgent{
 		this.targets = targets;
 	}
 
-	
-	
+	public void addTarget(Agent a) {
+		targets.add(a);
+		
+	}
+
 
 
 	

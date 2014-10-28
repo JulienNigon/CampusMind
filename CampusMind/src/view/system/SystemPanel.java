@@ -28,6 +28,7 @@ import kernel.World;
 public class SystemPanel extends JPanel{
 
 	DefaultTableModel tableModel;
+	GrapheSystemPanel graphSystemPanel;
 	private World world;
 
 	
@@ -38,12 +39,13 @@ public class SystemPanel extends JPanel{
 		JSplitPane splitPane_1 = new JSplitPane();
 		add(splitPane_1);
 		
-		JTextPane textPane = new JTextPane();
-		splitPane_1.setLeftComponent(textPane);
+		graphSystemPanel = new GrapheSystemPanel();
+		splitPane_1.setLeftComponent(graphSystemPanel);
 		
 		Object[] col = {"TYPE","NAME","ID","1","2"};
 		tableModel = new DefaultTableModel(col, 0);
 		
+		graphSystemPanel.setWorld(world);
 		update();
 		
 		JTable table = new JTable(tableModel);
@@ -81,6 +83,7 @@ public class SystemPanel extends JPanel{
 			tableModel.addRow(data);
 		}
 		
+		graphSystemPanel.update();
 		
 	}
 
@@ -96,11 +99,13 @@ public class SystemPanel extends JPanel{
 
 
 	public World getWorld() {
+		
 		return world;
 	}
 
 
 	public void setWorld(World world) {
+		
 		this.world = world;
 	}
 	

@@ -11,6 +11,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 
+import view.blackbox.BlackBoxPanel;
 import blackbox.BlackBox;
 import kernel.World;
 

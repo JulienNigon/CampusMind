@@ -1,4 +1,4 @@
-package view.system;
+package view.blackbox;
 
 import java.awt.Dimension;
 import java.util.ArrayList;

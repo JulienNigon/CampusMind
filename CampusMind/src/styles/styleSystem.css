@@ -1,25 +1,37 @@
 graph {
     fill-color: white;
 }
+
 node { size-mode: fit; shape: rounded-box; fill-color: white; stroke-mode: plain; padding: 3px, 2px; }
 
-node.Input {
+
+node.Variable {
 	fill-color: green;
 }
 
-node.Output {
-	fill-color: orange;
+node.Controller {
+	fill-color: yellow;
 }
 
-node.Function {
-	fill-color: grey;
+node.Context {
+	fill-color: cyan;
+}
+
+node.Criterion {
+	fill-color: red;
 }
 
 
 edge {
     arrow-shape: arrow;
+    stroke-color: grey;
+    fill-color: grey;
     arrow-size: 6px, 4px;
 }
+
+edge.validContext {
+	fill-color: green;
+	}
 
 node:clicked {
     fill-color: blue;

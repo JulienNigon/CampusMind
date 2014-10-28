@@ -1,4 +1,4 @@
-package view.system;
+package view.blackbox;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -39,7 +39,7 @@ public class GrapheBlackBoxPanel extends JPanel{
 
 		this.setMinimumSize(new Dimension(400,400));
 
-		toolBar = new JToolBar();
+		toolBar = new JToolBar(null, JToolBar.VERTICAL);
 
 		buttonShowDefault = new JButton(Config.getIcon("tag--plus.png"));
 		buttonShowDefault.addActionListener(e -> {showDefault();});
@@ -53,7 +53,7 @@ public class GrapheBlackBoxPanel extends JPanel{
 		buttonShowName.addActionListener(e -> {showName();});
 		toolBar.add(buttonShowName);
 		
-		this.add(toolBar,BorderLayout.NORTH);
+		this.add(toolBar,BorderLayout.WEST);
 
 		
 		//update();
@@ -142,7 +142,7 @@ public class GrapheBlackBoxPanel extends JPanel{
 			BlackBoxAgent bba = blackBox.getBlackBoxAgents().get(name);
 
 			for (Agent target : bba.getTargets()) {
-				graph.addEdge(bba.getName() + " " + target.toString(), bba.getName(), target.getName(), true);				
+				graph.addEdge(bba.getName() + " " + target.getName(), bba.getName(), target.getName(), true);				
 			}
 			
 		}
