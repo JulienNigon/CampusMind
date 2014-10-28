@@ -7,6 +7,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
 
+import blackbox.BlackBox;
 import kernel.Config;
 import kernel.World;
 import javafx.application.*;
@@ -28,11 +29,11 @@ public class MainPanel extends JPanel{
 		this.setLayout(new BorderLayout());
 		toolBar = new JToolBar();
 		
-		buttonPauseStart = new JButton(Config.getIcon("arrow.png"));
+		buttonPauseStart = new JButton(Config.getIcon("control.png"));
 		buttonPauseStart.addActionListener(e -> {togglePause(!world.getScheduler().isRunning());});
 		toolBar.add(buttonPauseStart);
 
-		buttonPlayOneStep = new JButton(Config.getIcon("arrow-step-over.png"));
+		buttonPlayOneStep = new JButton(Config.getIcon("control-stop.png"));
 		buttonPlayOneStep.addActionListener(e -> {oneStep();});
 		toolBar.add(buttonPlayOneStep);
 
@@ -60,7 +61,7 @@ public class MainPanel extends JPanel{
 		world.getScheduler().setRunning(newState);
 		boolean running = world.getScheduler().isRunning();
 		if (!running) {
-			buttonPauseStart.setIcon(Config.getIcon("arrow.png"));
+			buttonPauseStart.setIcon(Config.getIcon("control.png"));
 		} else {
 			buttonPauseStart.setIcon(Config.getIcon("control-pause.png"));
 		}
@@ -69,6 +70,10 @@ public class MainPanel extends JPanel{
 	public void setWorld(World world) {
 		this.world = world;
 		tabbedPanel.setWorld(world);
+	}
+	
+	public void setBlackBox(BlackBox blackBox) {
+		tabbedPanel.setBlackBox(blackBox);
 	}
 	
 	public void update() {

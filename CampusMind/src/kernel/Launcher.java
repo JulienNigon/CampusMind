@@ -11,11 +11,12 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import org.graphstream.graph.*;
+import org.graphstream.graph.implementations.SingleGraph;
 import org.jdom2.*;
 
 import view.system.MainPanel;
 import view.system.MainTabbedPanel;
-
 import blackbox.BlackBox;
 
 public class Launcher {
@@ -24,6 +25,13 @@ public class Launcher {
 
 	public static void main(String[] args) {
 		
+		//Use the advanced graph viewer from GraphStream
+		System.setProperty("org.graphstream.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
+		
+		
+        Graph graph = new SingleGraph("Tutorial 1");
+        
+
 
 		setSystemLookAndFeel();
 		
@@ -38,7 +46,7 @@ public class Launcher {
 
 				frame.setContentPane(mainPanel);
 		//		frame.getContentPane().add(new JLabel("plouf"),BorderLayout.CENTER);
-				frame.pack();
+				
 				frame.setVisible(true);
 
 
@@ -47,16 +55,19 @@ public class Launcher {
 		
 		Scheduler scheduler = new Scheduler();
 
-		BlackBox blackbox = new BlackBox(scheduler, new File(System
+		BlackBox blackBox = new BlackBox(scheduler, new File(System
 				.getProperty("user.dir")
 				+ "/bin/ressources/BlackBox.xml"));
 		World world = new World(scheduler,
 				new File(System.getProperty("user.dir")
 						+ "/bin/ressources/System.xml"),
-						blackbox);
-		world.setBlackBox(blackbox);
+						blackBox);
+		world.setBlackBox(blackBox);
 
 		mainPanel.setWorld(world);
+		mainPanel.setBlackBox(blackBox);
+		frame.pack();
+		
 		scheduler.setView(mainPanel);
 		
 		scheduler.setWorld(world);

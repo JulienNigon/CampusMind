@@ -9,5 +9,8 @@
 	<classpathentry kind="lib" path="/home/nigon/git/CampusMind/CampusMind/src/gs-core-1.2/gs-core-1.2.jar"/>
 	<classpathentry kind="lib" path="/home/nigon/git/CampusMind/CampusMind/src/gs-core-1.2/gs-core-1.2-javadoc.jar"/>
 	<classpathentry kind="lib" path="/home/nigon/git/CampusMind/CampusMind/src/gs-core-1.2/gs-core-1.2-sources.jar"/>
+	<classpathentry kind="lib" path="/home/nigon/git/CampusMind/CampusMind/src/gs-ui-1.2/gs-ui-1.2.jar"/>
+	<classpathentry kind="lib" path="/home/nigon/git/CampusMind/CampusMind/src/gs-ui-1.2/gs-ui-1.2-javadoc.jar"/>
+	<classpathentry kind="lib" path="/home/nigon/git/CampusMind/CampusMind/src/gs-ui-1.2/gs-ui-1.2-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

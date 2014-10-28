@@ -1,5 +1,6 @@
 package view.system;
 
+import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -7,6 +8,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import view.animation.JJPanel;
+
 import javax.swing.JList;
 import javax.swing.JSplitPane;
 import javax.swing.JDesktopPane;
@@ -15,16 +17,19 @@ import javax.swing.JTextPane;
 import javax.swing.BoxLayout;
 import javax.swing.table.DefaultTableModel;
 
+import org.graphstream.graph.Graph;
+import org.graphstream.graph.implementations.SingleGraph;
+import org.graphstream.ui.swingViewer.Viewer;
+
 import blackbox.BlackBox;
 import blackbox.BlackBoxAgent;
-
 import kernel.World;
 
 public class BlackBoxPanel extends JPanel{
 
 	DefaultTableModel tableModel;
 	private World world;
-
+	GrapheBlackBoxPanel graphPanel;
 	
 	public BlackBoxPanel(World world) {
 		this.world = world;
@@ -33,8 +38,9 @@ public class BlackBoxPanel extends JPanel{
 		JSplitPane splitPane_1 = new JSplitPane();
 		add(splitPane_1);
 		
-		JTextPane textPane = new JTextPane();
-		splitPane_1.setLeftComponent(textPane);
+		graphPanel = new GrapheBlackBoxPanel();
+		splitPane_1.setLeftComponent(graphPanel);
+	//	this.add(graphPanel);
 		
 		String col[] = {"Type","Name","ID","Value"};
 		tableModel = new DefaultTableModel(col, 0);
@@ -43,6 +49,23 @@ public class BlackBoxPanel extends JPanel{
 		
 		JTable table = new JTable(tableModel);
 		splitPane_1.setRightComponent(table);
+		
+	/*	Graph graph = new SingleGraph("I can see dead pixels");
+		graph.addNode("XXX");
+		graph.addNode("YYY");
+		graph.addNode("ZZZ");
+		graph.addNode("A" );
+		graph.addNode("B" );
+		graph.addNode("C" );
+		graph.addEdge("AB", "A", "B");
+		graph.addEdge("BC", "B", "C");
+		graph.addEdge("CA", "C", "A");
+		
+		Viewer viewer = new Viewer(graph, Viewer.ThreadingModel.GRAPH_IN_SWING_THREAD);
+		viewer.addDefaultView(false);
+
+		viewer.getDefaultView().setMinimumSize(new Dimension(400,400));
+		this.add(viewer.getDefaultView());*/
 		
 	}
 	
@@ -66,6 +89,7 @@ public class BlackBoxPanel extends JPanel{
 			tableModel.addRow(data);
 		}
 		
+		graphPanel.update();
 		
 	}
 
@@ -89,5 +113,7 @@ public class BlackBoxPanel extends JPanel{
 		this.world = world;
 	}
 	
-	
+	public void setBlackBox(BlackBox blackBox) {
+		graphPanel.setBlackBox(blackBox);
+	}
 }

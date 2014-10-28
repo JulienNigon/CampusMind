@@ -11,6 +11,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 
+import blackbox.BlackBox;
 import kernel.World;
 
 public class MainTabbedPanel extends JTabbedPane{
@@ -51,5 +52,8 @@ public class MainTabbedPanel extends JTabbedPane{
 		world.getScheduler().setWaitForGUIUpdate(false);
 	}
 	
+	public void setBlackBox(BlackBox blackBox) {
+		blackBoxPanel.setBlackBox(blackBox);
+	}
 	
 }
