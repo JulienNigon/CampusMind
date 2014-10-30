@@ -1,8 +1,11 @@
 package view.system;
 
+import java.awt.AWTException;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Robot;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 
 import javax.swing.BoxLayout;
@@ -10,6 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
+import javax.swing.SwingUtilities;
 import javax.swing.event.MouseInputListener;
 
 import kernel.Config;
@@ -34,8 +38,11 @@ public class GrapheSystemPanel extends JPanel implements ViewerListener, MouseIn
 	Graph graph;
 	Viewer viewer;
 	World world;
-	ViewerPipe pipe;
 	
+	/* ----Interaction with system----*/
+	ViewerPipe pipe;
+	Boolean rightClick = false;
+
 	/* ----ToolBar Components----*/
 	private JToolBar toolBar;
 	private JButton buttonShowValue;
@@ -317,14 +324,19 @@ public class GrapheSystemPanel extends JPanel implements ViewerListener, MouseIn
 		
 		System.out.println(world.getAgents().get(id).toString());
 		
-		if (world.getAgents().get(id) instanceof Criterion) {
-			PanelCriterion pan = new PanelCriterion((Criterion) world.getAgents().get(id));
-			JFrame frame = new JFrame(id);
-			world.getScheduler().addScheduledItem(pan);
-			frame.setContentPane(pan);
-			frame.setVisible(true);
-			frame.pack();
+		if (rightClick) {
+			if (world.getAgents().get(id) instanceof Criterion) {
+				PanelCriterion pan = new PanelCriterion((Criterion) world.getAgents().get(id), world);
+				JFrame frame = new JFrame(id);
+				world.getScheduler().addScheduledItem(pan);
+				frame.setContentPane(pan);
+				frame.setVisible(true);
+				frame.pack();
+			}
+			
+			rightClick = false;
 		}
+
 
 		
 	}
@@ -343,7 +355,20 @@ public class GrapheSystemPanel extends JPanel implements ViewerListener, MouseIn
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		System.out.println("click");
+		if(SwingUtilities.isRightMouseButton(e)){
+			rightClick = true;
+			Robot bot;
+			try {
+				bot = new Robot();
+				int mask = InputEvent.BUTTON1_DOWN_MASK;
+				bot.mousePress(mask);  
+				bot.mouseRelease(mask);  
+			} catch (AWTException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+   
+		}
 		pipe.pump();
 	}
 

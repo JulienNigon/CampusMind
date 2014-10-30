@@ -1,4 +1,4 @@
-package view.system;
+package view.global;
 
 import java.awt.FlowLayout;
 import java.util.HashMap;
@@ -22,42 +22,41 @@ import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
+import view.system.ScheduledItem;
 import agents.criterion.Criterion;
 
-public class PanelCriterion extends JPanel implements ScheduledItem {
+public class PanelChart extends JPanel implements ScheduledItem {
 
-	/* Criticity chart */
-	ChartPanel chartPanelCriticity;
-	JFreeChart chartCriticity;
-	XYSeriesCollection datasetCriticity;
+	/* Agents chart */
+	ChartPanel chartPanelAgents;
+	JFreeChart chartAgents;
+	XYSeriesCollection dataSetAgents;
 
 	/* Value chart */
 	ChartPanel chartPanelValue;
 	JFreeChart chartValue;
 	XYSeriesCollection datasetValue;
 
-	Criterion criterion;
 	World world;
 
-	public PanelCriterion(Criterion criterion, World world) {
+	public PanelChart(World world) {
 
 		this.setLayout(new FlowLayout());
-		this.criterion = criterion;
 		this.world = world;
 
-		/* Create criticity chart */
-		datasetCriticity = createDataset();
+		/* Create Agent chart */
+		dataSetAgents = createDataSetAgents();
 		JFreeChart chart = createChart();
-		chartPanelCriticity = new ChartPanel(chart);
-		chartPanelCriticity.setPreferredSize(new java.awt.Dimension(300, 200));
-		this.add(chartPanelCriticity);
+		chartPanelAgents = new ChartPanel(chart);
+		chartPanelAgents.setPreferredSize(new java.awt.Dimension(600, 400));
+		this.add(chartPanelAgents);
 
 		/* Create value chart */
-		datasetValue = createDatasetValue();
+	/*	datasetValue = createDatasetValue();
 		JFreeChart chartValue = createChartValue();
 		chartPanelValue = new ChartPanel(chartValue);
 		chartPanelValue.setPreferredSize(new java.awt.Dimension(300, 200));
-		this.add(chartPanelValue);
+		this.add(chartPanelValue);*/
 
 	}
 
@@ -69,12 +68,14 @@ public class PanelCriterion extends JPanel implements ScheduledItem {
 	 * method stub return null; }
 	 */
 
-	private XYSeriesCollection createDataset() {
+	private XYSeriesCollection createDataSetAgents() {
 
 		XYSeriesCollection collection = new XYSeriesCollection();
 
-		collection.addSeries(new XYSeries("criticity"));
-		collection.addSeries(new XYSeries("variation"));
+		collection.addSeries(new XYSeries("Context"));
+		collection.addSeries(new XYSeries("Variable"));
+		collection.addSeries(new XYSeries("Controller"));
+		collection.addSeries(new XYSeries("Criterion"));
 
 		return collection;
 
@@ -93,9 +94,9 @@ public class PanelCriterion extends JPanel implements ScheduledItem {
 	private JFreeChart createChart() {
 
 		// create subplot 1...
-		final XYDataset data1 = datasetCriticity;
+		final XYDataset data1 = dataSetAgents;
 		final XYItemRenderer renderer1 = new StandardXYItemRenderer();
-		final NumberAxis rangeAxis1 = new NumberAxis("Criticity level");
+		final NumberAxis rangeAxis1 = new NumberAxis("Agents in AMAS");
 		final XYPlot subplot1 = new XYPlot(data1, null, rangeAxis1, renderer1);
 		subplot1.setRangeAxisLocation(AxisLocation.BOTTOM_OR_LEFT);
 
@@ -109,7 +110,7 @@ public class PanelCriterion extends JPanel implements ScheduledItem {
 		plot.setOrientation(PlotOrientation.VERTICAL);
 
 		// return a new chart containing the overlaid plot...
-		return new JFreeChart(criterion.getName() + " criticity over time",
+		return new JFreeChart(" Agents in AMAS",
 				JFreeChart.DEFAULT_TITLE_FONT, plot, true);
 	}
 
@@ -139,12 +140,16 @@ public class PanelCriterion extends JPanel implements ScheduledItem {
 	@Override
 	public void update() {
 
-		datasetCriticity.getSeries("criticity").add(
-				world.getScheduler().getTick(), criterion.getCriticity());
-		datasetCriticity.getSeries("variation").add(
-				world.getScheduler().getTick(), criterion.getVariation());
-		datasetValue.getSeries("variable").add(world.getScheduler().getTick(),
-				criterion.getValue());
+		int tick = world.getScheduler().getTick();
+		
+		dataSetAgents.getSeries("Context").add(
+				tick, world.getNumberOfAgents().get("Context"));
+		dataSetAgents.getSeries("Variable").add(
+				tick, world.getNumberOfAgents().get("Variable"));
+		dataSetAgents.getSeries("Controller").add(
+				tick, world.getNumberOfAgents().get("Controller"));
+		dataSetAgents.getSeries("Criterion").add(
+				tick, world.getNumberOfAgents().get("Criterion"));
 
 	}
 

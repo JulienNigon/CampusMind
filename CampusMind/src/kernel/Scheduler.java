@@ -10,6 +10,7 @@ import view.system.MainPanel;
 import view.system.MainTabbedPanel;
 import view.system.ScheduledItem;
 import agents.Agent;
+import agents.controler.Controller;
 
 public class Scheduler {
 
@@ -57,7 +58,7 @@ public class Scheduler {
 					a.setID(nextID);
 					nextID++;
 					int i = 0;
-					while (i < agents.size() && agents.get(i).getClass() != a.getClass()) i++;
+					while ((i < agents.size() && agents.get(i).getClass() != a.getClass()) &&  !(agents.get(i) instanceof Controller)) i++;
 					agents.add(i,a);
 				}
 				waitList.clear();
@@ -65,12 +66,14 @@ public class Scheduler {
 				//Compute message
 				for (Agent agent : agents) {
 					agent.readMessage();
+					agent.play();
+
 				}
 				
 				//Act
-				for (Agent agent : agents) {
-					agent.play();
-				}
+		//		for (Agent agent : agents) {
+		//			agent.play();
+		//		}
 				
 				//Scheduled item
 				for (ScheduledItem item : scheduled) {

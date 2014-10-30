@@ -57,7 +57,7 @@ public class Range {
 	}
 	
 	public String toString() {
-		return "["+start+","+end+"]" + "("+value+")";
+		return "["+start+","+end+"]" + "("+value+")" + " " + isChecked();
 	}
 	
 	

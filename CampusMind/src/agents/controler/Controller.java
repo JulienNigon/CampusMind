@@ -51,24 +51,31 @@ public class Controller extends SystemAgent{
 	}
 	
 	public void play() {
+
 		bestContext = null;
 		super.play();
 	//	System.out.println("context size : " + contexts.size());
 		if (oldCriticity.size() > 0) {			/*Let some time for initialisation*/
 			if (contexts.size() > 0) selectBestContext();
-			if (bestContext != null && bestContext.getPredictionFor(criticalCriterion) < 0) {
+			if (bestContext != null && bestContext.getPredictionFor(criticalCriterion) <= 0) {
 				//	System.out.println("Messages reçus! " + criticalCriterion.getName());
 				
 				//	System.out.println(blackBoxInput.getName());
 				//	System.out.println(bestContext.getName());
 				action = bestContext.getAction();
 				sendMessage(action, MessageType.VALUE, blackBoxInput);
+				System.out.println("Résultat : " + action);
+				
 				Object[] infos = {criticalCriterion, criticalCriterion.getCriticity()};
 				sendMessage(infos, MessageType.SELECTION, bestContext);
 			}
 			else
 			{
-				action = Math.random() * 10 - 5;
+				if (criticity.get(criticalCriterion) - oldCriticity.get(criticalCriterion) < 0) {
+					// 
+				} else {
+					action = Math.random() * 2 - 1;
+				}
 				sendMessage(action, MessageType.VALUE, blackBoxInput);  //TODO test only purpose
 				Context context = new Context(world, this);
 				context.setName(String.valueOf(context.hashCode()));

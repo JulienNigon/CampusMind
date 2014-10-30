@@ -12,6 +12,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 
 import view.blackbox.BlackBoxPanel;
+import view.global.PanelChart;
 import blackbox.BlackBox;
 import kernel.World;
 
@@ -20,6 +21,7 @@ public class MainTabbedPanel extends JTabbedPane{
 	private World world;
 	private BlackBoxPanel blackBoxPanel;
 	private SystemPanel systemPanel;
+	private PanelChart panelChart;
 	
 
 	public MainTabbedPanel() {
@@ -39,10 +41,14 @@ public class MainTabbedPanel extends JTabbedPane{
 		
 		blackBoxPanel = new BlackBoxPanel(world);
 		systemPanel = new SystemPanel(world);
+		panelChart = new PanelChart(world);
+		
+		world.getScheduler().addScheduledItem(panelChart);
+		
 	//	new JScrollPane(panelGroupManager,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS), BorderLayout.CENTER
 		this.addTab("BlackBox", new JScrollPane(blackBoxPanel,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS));
 		this.addTab("System", systemPanel);
-		this.addTab("Context", new JPanel());
+		this.addTab("Charts", new JScrollPane(panelChart,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS));
 
 		((Frame) this.getTopLevelAncestor()).pack();
 	}

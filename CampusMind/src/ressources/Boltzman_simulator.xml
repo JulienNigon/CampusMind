@@ -5,8 +5,8 @@
 		<Input Name="Avogadro" DefaultValue="6.02214129">
 			<Target Name="Func"></Target>
 		</Input>
-		<Input Name="Boltzman" DefaultValue="0">
-			<Target Name="Func"></Target>
+		<Input Name="Boltzman" DefaultValue="100">
+			<Target Name="Tempo"></Target>
 		</Input>
 	</Inputs>
 		
@@ -14,11 +14,23 @@
 		<Output Name="ConstanteGazParfait" DefaultValue="0"></Output>	
 	</Outputs>
 	
+
+			
 	<Functions>
+				<Function Name="Tempo" Func="PLUS">
+			<Target Name="Func"></Target>
+			<Target Name="Tempo"></Target>
+			<InputA Name="Tempo"></InputA>
+			<InputB Name="Boltzman"></InputB></Function>
+			
 		<Function Name="Func" Func="MULT">
 			<Target Name="ConstanteGazParfait"></Target>
 			<InputA Name="Avogadro"></InputA>
-			<InputB Name="Boltzman"></InputB></Function>
+			<InputB Name="Tempo"></InputB></Function>
+			
+
+			
+			
 	</Functions>
 			
 </BlackBox>

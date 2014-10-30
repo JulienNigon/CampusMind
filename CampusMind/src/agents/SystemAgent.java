@@ -9,10 +9,16 @@ public abstract class SystemAgent extends Agent{
 
 	
 	protected World world;
+	
+	public void play() {
+	//	System.out.println(this.getClass().getSimpleName());
+		super.play();
+	}
 
 	
 	public SystemAgent(World world) {
 		this.world = world;
+		world.changeAgentNumber(1, this.getClass().getSimpleName());
 		// TODO Auto-generated constructor stub
 	}
 

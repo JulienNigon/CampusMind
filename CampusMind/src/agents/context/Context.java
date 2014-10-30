@@ -27,7 +27,7 @@ public class Context extends SystemAgent{
 	private Criterion criticalCriterion;
 	private double lastCriticity;
 	private boolean selected = false;
-	private final double acceptedError = 0.05;  //TODO : to improve
+	private final double acceptedError = 0.01;  //TODO : to improve
 	private boolean unselectable = false;
 	private boolean needPredictions = true;
 	
@@ -65,8 +65,8 @@ public class Context extends SystemAgent{
 	@Override
 	public void computeAMessage(Message m) {
 		if (m.getType() == MessageType.VALUE) {
-		//	System.out.println(m.getContent());
 			if(m.getSender() instanceof Variable) {
+	//			System.out.println(m.getContent());
 				ranges.get(m.getSender()).setValue((Double)m.getContent());
 			}
 			else if(m.getSender() instanceof Criterion) {
@@ -86,8 +86,9 @@ public class Context extends SystemAgent{
 
 
 	public void play() {
-		//System.out.println("play");
 		super.play();
+		
+		if(!selected) nSelection = 0;
 		
 		/*Init the new predictions*/
 		if (this.needPredictions) {
@@ -108,10 +109,12 @@ public class Context extends SystemAgent{
 					solveNCS_inexactPredictions();
 				}
 			}
+			solveNCS_inexactPredictions();
+			//TODO :improve
 		}
 		
 		if (nSelection >= 2) {
-			solveNCS_improductivity();
+//TODO			solveNCS_improductivity();
 		}
 		
 		/* If the context is valid, send a message to the controller.*/
@@ -120,7 +123,7 @@ public class Context extends SystemAgent{
 		}
 		criticalCriterion = null;
 		lastCriticity = 0.00;
-		if(!selected) nSelection = 0;
+		
 		selected = false;
 		unselectable = false;
 	}
@@ -128,7 +131,7 @@ public class Context extends SystemAgent{
 	private void solveNCS_improductivity() {
 		// TODO raise NCS
 		// TODO AVT
-	//	action += (0.1*action);
+		action += (0.01*action);
 	}
 
 	private void solveNCS_inexactPredictions() {  /*NCS 5 in Jeremy thesis*/
