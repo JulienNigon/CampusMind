@@ -18,6 +18,7 @@ public class Criterion extends SystemAgent{
 
 
 	private double criticity;
+	private double variation;
 	private CriticityType criticityType;
 	private double reference;
 	private ArrayList<Agent> targets = new ArrayList<Agent>();
@@ -33,7 +34,9 @@ public class Criterion extends SystemAgent{
 	@Override
 	public void computeAMessage(Message m) {
 		if (m.getType() == MessageType.VALUE) {
-			criticity = criticityType.computeCriticity((double)m.getContent(), reference);
+			double temp = criticityType.computeCriticity((double)m.getContent(), reference);
+			variation = temp - criticity;
+			criticity = temp;
 		}
 		if(m.getType() == MessageType.REGISTER) {
 			targets.add(m.getSender());
@@ -81,5 +84,16 @@ public class Criterion extends SystemAgent{
 		targets.add(a);
 	}
 
+
+	public double getVariation() {
+		return variation;
+	}
+
+
+	public void setVariation(double variation) {
+		this.variation = variation;
+	}
+
+	
 
 }

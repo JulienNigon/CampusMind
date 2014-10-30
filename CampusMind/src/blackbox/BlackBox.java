@@ -43,13 +43,6 @@ public class BlackBox {
 		    	registerBlackBoxAgent(a);
 		    }
 		    
-		    // Initialize the Output agents
-		    for (Element element : racine.getChild("Outputs").getChildren("Output")){
-		    	Output a = new Output();
-		    	a.setName(element.getAttributeValue("Name"));
-		    	a.setValue(Double.parseDouble(element.getAttributeValue("DefaultValue")));
-		    	registerBlackBoxAgent(a);
-		    }
 		    
 		    // Initialize the Functions agents
 		    for (Element element : racine.getChild("Functions").getChildren("Function")){
@@ -58,6 +51,15 @@ public class BlackBox {
 		    	a.setFunc(MathFunction.valueOf(element.getAttributeValue("Func")));
 		    	registerBlackBoxAgent(a);
 		    }
+		    
+		    // Initialize the Output agents
+		    for (Element element : racine.getChild("Outputs").getChildren("Output")){
+		    	Output a = new Output();
+		    	a.setName(element.getAttributeValue("Name"));
+		    	a.setValue(Double.parseDouble(element.getAttributeValue("DefaultValue")));
+		    	registerBlackBoxAgent(a);
+		    }
+
 		    
 			createLinks(racine);
 		    

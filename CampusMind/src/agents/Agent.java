@@ -10,10 +10,10 @@ import agents.messages.MessageType;
 
 public abstract class Agent {
 	
-	private int ID;
-	private String name;
-	private Stack<Message> messages = new Stack<Message>();
-	private Stack<Message> messagesBin = new Stack<Message>();
+	protected int ID;
+	protected String name;
+	protected Stack<Message> messages = new Stack<Message>();
+	protected Stack<Message> messagesBin = new Stack<Message>();
 
 
 	public void play() {
@@ -52,7 +52,16 @@ public abstract class Agent {
 	public void sendMessage(Object object, MessageType type, Agent a) {
 		a.receiveMessage(new Message(object,type,this));
 	}
+	
+	public void sendExpressMessage(Object object, MessageType type, Agent a) {
+		a.receiveExpressMessage(new Message(object,type,this));
+	}
 
+	//TODO Improve?
+	private void receiveExpressMessage(Message message) {
+		computeAMessage(message);
+	}
+	
 	private void receiveMessage(Message message) {
 		messages.push(message);
 	}

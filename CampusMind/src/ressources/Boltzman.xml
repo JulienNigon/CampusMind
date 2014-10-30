@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<System>
+	<StartingAgents>
+	
+		<Sensor Name="Sensor" Source="ConstanteGazParfait"></Sensor>
+		<Controller Name="Controller" InputTarget="Boltzman"></Controller>
+
+		<Criterion Name="Criterion_Min" Reference="8.3144621" CriticityType="LOWER">
+			<CriticalVariable Name="Sensor"></CriticalVariable></Criterion>
+		<Criterion Name="Criterion_Max" Reference="8.3144621" CriticityType="HIGHER">
+			<CriticalVariable Name="Sensor"></CriticalVariable></Criterion>
+			
+	</StartingAgents>
+</System>

@@ -5,6 +5,7 @@ public class Range {
 	private double start;
 	private double end;
 	private double value;
+	private double oldValue;
 	
 	
 	
@@ -16,11 +17,11 @@ public class Range {
 	}
 	
 	public boolean isInRange (double value) {
-		return (value >= start && value <= end);
+		return (value > start && value < end);
 	}
 	
 	public boolean isChecked () {
-		return (value >= start && value <= end);
+		return (value > start && value < end);
 	}
 	
 	public double getStart() {
@@ -41,9 +42,23 @@ public class Range {
 	}
 
 	public void setValue(double value) {
+		this.oldValue = this.value;
 		this.value = value;
 	}
 	
+	public void fit() {
+		//TODO +% is good?
+		if (Math.abs(oldValue-start) > Math.abs(oldValue-end)) {
+			end = oldValue + Math.abs(0.001*oldValue);
+		}
+		else {
+			start = oldValue - Math.abs(0.001*oldValue);
+		}
+	}
+	
+	public String toString() {
+		return "["+start+","+end+"]" + "("+value+")";
+	}
 	
 	
 	

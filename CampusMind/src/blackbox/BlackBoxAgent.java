@@ -20,6 +20,13 @@ public abstract class BlackBoxAgent extends Agent{
 		this.targets = targets;
 	}
 	
+	public void readMessage() {
+		super.readMessage();
+		fastPlay();
+	}
+	
 	public abstract double getValue();
+	
+	public abstract void fastPlay();
 	
 }

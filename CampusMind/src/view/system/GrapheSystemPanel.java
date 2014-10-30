@@ -2,11 +2,15 @@ package view.system;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
+import javax.swing.event.MouseInputListener;
 
 import kernel.Config;
 import kernel.World;
@@ -14,19 +18,23 @@ import kernel.World;
 import org.graphstream.graph.*;
 import org.graphstream.graph.implementations.*;
 import org.graphstream.ui.swingViewer.Viewer;
+import org.graphstream.ui.swingViewer.ViewerListener;
+import org.graphstream.ui.swingViewer.ViewerPipe;
 
 import agents.Agent;
 import agents.SystemAgent;
 import agents.context.Context;
+import agents.criterion.Criterion;
 import blackbox.BlackBox;
 import blackbox.BlackBoxAgent;
 import blackbox.Input;
 
-public class GrapheSystemPanel extends JPanel{
+public class GrapheSystemPanel extends JPanel implements ViewerListener, MouseInputListener{
 	
 	Graph graph;
 	Viewer viewer;
 	World world;
+	ViewerPipe pipe;
 	
 	/* ----ToolBar Components----*/
 	private JToolBar toolBar;
@@ -36,6 +44,8 @@ public class GrapheSystemPanel extends JPanel{
 	private JButton buttonDestroyContext;
 	private JButton buttonSoftStyle;
 	private JButton buttonStandardStyle;
+	private JButton buttonEnableAutoLayout;
+	private JButton buttonDisableAutoLayout;
 
 	private int viewMode = 0;
 
@@ -75,11 +85,30 @@ public class GrapheSystemPanel extends JPanel{
 		buttonDestroyContext.addActionListener(e -> {destroyContext();});
 		toolBar.add(buttonDestroyContext);
 		
+		buttonEnableAutoLayout = new JButton(Config.getIcon("node-select-all.png"));
+		buttonEnableAutoLayout.addActionListener(e -> {enableAutoLayout();});
+		buttonEnableAutoLayout.setToolTipText("Enable auto layout.");
+		toolBar.add(buttonEnableAutoLayout);
+		
+		buttonDisableAutoLayout = new JButton(Config.getIcon("node.png"));
+		buttonDisableAutoLayout.addActionListener(e -> {disableAutoLayout();});
+		buttonDisableAutoLayout.setToolTipText("Disable auto layout.");
+		toolBar.add(buttonDisableAutoLayout);
+		
 		this.add(toolBar,BorderLayout.WEST);
 
 		
+		//ViewerListener
 		//update();
 		
+	}
+	
+	public void enableAutoLayout() {
+		viewer.enableAutoLayout();
+	}
+	
+	public void disableAutoLayout() {
+		viewer.disableAutoLayout();
 	}
 	
 	public void setStandardStyle() {
@@ -93,7 +122,7 @@ public class GrapheSystemPanel extends JPanel{
 	}
 	
 	public void destroyContext() {
-		world.destroy(Context.class);
+		world.destroy(Context.class);  //TODO
 	}
 	
 	public void showValue() {
@@ -158,6 +187,16 @@ public class GrapheSystemPanel extends JPanel{
 				graph.getNode(name).addAttribute("ui.class", a.getClass().getSimpleName());
 				graph.getNode(name).addAttribute("ui.label", a.getName());
 			}
+			
+			if (a instanceof Context) {
+				if (((Context)a).getNSelection() > 0) {
+					graph.getNode(name).addAttribute("ui.class", "ContextSelected");;
+				}
+				else {
+					graph.getNode(name).addAttribute("ui.class", "Context");;
+				}
+			
+			}
 			graph.getNode(name).addAttribute("EXIST", true);
 
 		}
@@ -167,7 +206,7 @@ public class GrapheSystemPanel extends JPanel{
 			SystemAgent a = world.getAgents().get(name);
 
 			for (Agent target : a.getTargets()) {
-				String fullname = name + " " + target.toString();
+				String fullname = name + " " + target.getName();
 				if (graph.getEdge(fullname) == null) {
 					graph.addEdge(fullname, a.getName(), target.getName(), true);				
 				}
@@ -235,7 +274,7 @@ public class GrapheSystemPanel extends JPanel{
 			SystemAgent a = world.getAgents().get(name);
 
 			for (Agent target : a.getTargets()) {
-				graph.addEdge(a.getName() + " " + target.toString(), a.getName(), target.getName(), true);				
+				graph.addEdge(a.getName() + " " + target.getName(), a.getName(), target.getName(), true);				
 			}
 			
 		}
@@ -252,15 +291,94 @@ public class GrapheSystemPanel extends JPanel{
 		graph.addEdge("CA", "C", "A");
 		graph.addEdge("XY", "XXX", "YYY");**/
 
+		
 		viewer = new Viewer(graph, Viewer.ThreadingModel.GRAPH_IN_SWING_THREAD);
 		viewer.addDefaultView(false);
 		viewer.enableAutoLayout();
+		viewer.getDefaultView().addMouseListener(this);
+		
+
+		pipe = viewer.newViewerPipe();
+        pipe.addViewerListener(this);
+        pipe.addSink(graph);
 
 		viewer.getDefaultView().setMinimumSize(new Dimension(400,400));
 		this.add(viewer.getDefaultView(),BorderLayout.CENTER);
 	}
 
 	public void newAgent(Agent a) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void buttonPushed(String id) {
+		System.out.println("node pushed : " + id);
+		
+		System.out.println(world.getAgents().get(id).toString());
+		
+		if (world.getAgents().get(id) instanceof Criterion) {
+			PanelCriterion pan = new PanelCriterion((Criterion) world.getAgents().get(id));
+			JFrame frame = new JFrame(id);
+			world.getScheduler().addScheduledItem(pan);
+			frame.setContentPane(pan);
+			frame.setVisible(true);
+			frame.pack();
+		}
+
+		
+	}
+
+	@Override
+	public void buttonReleased(String id) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void viewClosed(String arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		System.out.println("click");
+		pipe.pump();
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
 	}

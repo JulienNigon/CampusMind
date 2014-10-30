@@ -21,6 +21,11 @@ node.Criterion {
 	fill-color: red;
 }
 
+node.ContextSelected {
+	fill-color: cyan;
+	stroke-color: red;
+	stroke-width: 4px;
+	}
 
 edge {
     arrow-shape: arrow;
@@ -30,7 +35,11 @@ edge {
 }
 
 edge.validContext {
-	fill-color: green;
+		fill-color: green;
+	}
+	
+edge.validWorstContext {
+		fill-color: green;
 	}
 
 node:clicked {

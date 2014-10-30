@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BlackBox>
+
+	<Inputs>
+		<Input Name="Avogadro" DefaultValue="6.02214129">
+			<Target Name="Func"></Target>
+		</Input>
+		<Input Name="Boltzman" DefaultValue="0">
+			<Target Name="Func"></Target>
+		</Input>
+	</Inputs>
+		
+	<Outputs>
+		<Output Name="ConstanteGazParfait" DefaultValue="0"></Output>	
+	</Outputs>
+	
+	<Functions>
+		<Function Name="Func" Func="MULT">
+			<Target Name="ConstanteGazParfait"></Target>
+			<InputA Name="Avogadro"></InputA>
+			<InputB Name="Boltzman"></InputB></Function>
+	</Functions>
+			
+</BlackBox>

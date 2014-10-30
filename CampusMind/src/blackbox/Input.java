@@ -14,6 +14,10 @@ public class Input extends BlackBoxAgent{
 	
 	public void play() {
 		super.play();
+
+	}
+	
+	public void fastPlay() {
 		for (Agent target : targets) {
 			sendMessage(new Message(value,MessageType.VALUE,this),target);
 		}

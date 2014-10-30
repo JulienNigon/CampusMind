@@ -17,6 +17,7 @@ import org.jdom2.*;
 
 import view.system.MainPanel;
 import view.system.MainTabbedPanel;
+import view.system.PanelCriterion;
 import blackbox.BlackBox;
 
 public class Launcher {
@@ -28,6 +29,11 @@ public class Launcher {
 		//Use the advanced graph viewer from GraphStream
 		System.setProperty("org.graphstream.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
 		
+	//	PanelCriterion pan = new PanelCriterion();
+	//	JFrame f = new JFrame();
+	//	world.getScheduler().addScheduledItem(pan);
+	//	f.setContentPane(pan);
+	//	f.setVisible(true);
 		
         Graph graph = new SingleGraph("Tutorial 1");
         
@@ -57,10 +63,12 @@ public class Launcher {
 
 		BlackBox blackBox = new BlackBox(scheduler, new File(System
 				.getProperty("user.dir")
-				+ "/bin/ressources/BlackBox.xml"));
+		//		+ "/bin/ressources/BlackBox.xml"));
+				+ "/bin/ressources/Boltzman_simulator.xml"));
 		World world = new World(scheduler,
 				new File(System.getProperty("user.dir")
-						+ "/bin/ressources/System.xml"),
+		//				+ "/bin/ressources/System.xml"),
+						+ "/bin/ressources/Boltzman.xml"),
 						blackBox);
 		world.setBlackBox(blackBox);
 

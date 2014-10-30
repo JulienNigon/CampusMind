@@ -91,9 +91,11 @@ public class JTableRenderer_Agents extends DefaultTableCellRenderer {
 			
 		}
 
+	}*/ else if (! ((value instanceof String)&&(value instanceof Double)&&(value instanceof Integer))){
+	//	this.setText("");
 	} else {
-		this.setBackground(Color.WHITE);
-	}*/
+	//	this.setText(value.toString());
+	}
 		
 		
 	}

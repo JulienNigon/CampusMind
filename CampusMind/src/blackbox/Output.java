@@ -17,6 +17,10 @@ public class Output extends BlackBoxAgent{
 	}
 	
 	
+	public void fastPlay() {
+
+	}
+	
 	@Override
 	public void computeAMessage(Message m) {
 		if (m.getType() == MessageType.VALUE) {

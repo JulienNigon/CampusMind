@@ -20,6 +20,7 @@ import javax.swing.table.DefaultTableModel;
 
 import agents.SystemAgent;
 import agents.Variable;
+import agents.context.Context;
 import agents.controler.Controller;
 import agents.criterion.Criterion;
 import blackbox.BlackBox;
@@ -43,7 +44,7 @@ public class SystemPanel extends JPanel{
 		graphSystemPanel = new GrapheSystemPanel();
 		splitPane_1.setLeftComponent(graphSystemPanel);
 		
-		Object[] col = {"TYPE","NAME","ID","1","2"};
+		Object[] col = {"TYPE","NAME","ID","1","2","3"};
 		tableModel = new DefaultTableModel(col, 0);
 		
 		graphSystemPanel.setWorld(world);
@@ -63,6 +64,11 @@ public class SystemPanel extends JPanel{
 		//Object[] entete = {"TYPE","NAME","ID","XXX"};
 		//tableModel.addRow(entete);
 		
+		int nVariable = 0;
+		int nCriterion = 0;
+		int nController = 0;
+		int nContext = 0;
+		
 		HashMap<String, SystemAgent> hashAgents = world.getAgents();
 		Object[] data = new Object[6];
 	//	System.out.println(hashAgents.keySet());
@@ -74,14 +80,25 @@ public class SystemPanel extends JPanel{
 			data[3] = a.getMessagesBin();
 			if (a instanceof Controller) {
 				data[4] = ((Controller) a).getBestContext();
+				nController++;
+				tableModel.insertRow(nCriterion+nVariable,data);
+
 			}
 			if (a instanceof Variable) {
 				data[4] = ((Variable) a).getValue();
+				nVariable++;
+				tableModel.insertRow(nCriterion,data);
 			}
 			if (a instanceof Criterion) {
 				data[4] = ((Criterion) a).getCriticity();
+				data[5] = "Var : " + ((Criterion) a).getVariation();
+				nCriterion++;
+				tableModel.insertRow(0,data);
+			} else if (a instanceof Context) {
+				nContext++;
+				tableModel.addRow(data);				
 			}
-			tableModel.addRow(data);
+
 		}
 		
 		graphSystemPanel.update();

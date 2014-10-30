@@ -2,6 +2,7 @@ package agents.messages;
 
 import agents.Agent;
 
+
 public class Message {
 
 	private Object content;

@@ -20,6 +20,10 @@ public class Function extends BlackBoxAgent{
 
 	public void play() {
 		super.play();
+
+	}
+	
+	public void fastPlay() {
 		double result = func.compute(a, b);
 		for (Agent target : targets) {
 			sendMessage(new Message(result,MessageType.VALUE,this),target);

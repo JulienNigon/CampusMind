@@ -8,12 +8,14 @@ import javax.swing.SwingUtilities;
 import view.system.GrapheSystemPanel;
 import view.system.MainPanel;
 import view.system.MainTabbedPanel;
+import view.system.ScheduledItem;
 import agents.Agent;
 
 public class Scheduler {
 
 	private ArrayList<Agent> agents = new ArrayList<Agent>();
 	private ArrayList<Agent> waitList = new ArrayList<Agent>();
+	private ArrayList<ScheduledItem> scheduled = new ArrayList<ScheduledItem>();
 
 	private boolean running = false;
 	private int tick;
@@ -68,6 +70,11 @@ public class Scheduler {
 				//Act
 				for (Agent agent : agents) {
 					agent.play();
+				}
+				
+				//Scheduled item
+				for (ScheduledItem item : scheduled) {
+					item.update();
 				}
 
 				if (view != null) {
@@ -171,7 +178,9 @@ public class Scheduler {
 		this.graphSystemPanel = graphSystemPanel;
 	}
 	
-	
+	public void addScheduledItem(ScheduledItem item) {
+		scheduled.add(item);
+	}
 	
 
 	

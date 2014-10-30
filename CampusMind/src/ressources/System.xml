@@ -4,8 +4,6 @@
 	
 		<Sensor Name="Senseur_1" Source="Output_Alpha"></Sensor>
 		<Sensor Name="Senseur_2" Source="Output_Beta"></Sensor>
-		<Sensor Name="Senseur_3" Source="Input_Alpha"></Sensor>
-		<Sensor Name="Senseur_4" Source="Input_Beta"></Sensor>
 		<Controller Name="Controller_Alpha" InputTarget="Input_Alpha"></Controller>
 		<Controller Name="Controller_Beta" InputTarget="Input_Beta"></Controller>
 

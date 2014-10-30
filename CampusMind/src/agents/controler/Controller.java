@@ -1,6 +1,7 @@
 package agents.controler;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import kernel.World;
 import blackbox.Input;
@@ -20,10 +21,14 @@ public class Controller extends SystemAgent{
 	}
 
 	private ArrayList<Context> contexts = new ArrayList<Context>();
+	private HashMap<Criterion,Double> criticity = new HashMap<Criterion,Double>();
+	private HashMap<Criterion,Double> oldCriticity = new HashMap<Criterion,Double>();
 	private Criterion criticalCriterion;
 	private Context bestContext;
 	private Input blackBoxInput;
+	private double action;
 
+	
 
 	@Override
 	public void computeAMessage(Message m) {
@@ -36,6 +41,7 @@ public class Controller extends SystemAgent{
 		if (m.getType() == MessageType.VALUE) { //Criterion
 		//	System.out.println("message reçu du criterion");
 			Criterion newCriterion = (Criterion) m.getSender();
+			criticity.put((Criterion) m.getSender(), (Double)m.getContent());
 			if (criticalCriterion == null) {
 				criticalCriterion = newCriterion;
 			} else if (criticalCriterion.getCriticity() < newCriterion.getCriticity()) {
@@ -48,24 +54,27 @@ public class Controller extends SystemAgent{
 		bestContext = null;
 		super.play();
 	//	System.out.println("context size : " + contexts.size());
-		if (contexts.size() > 0) selectBestContext();
-		if (bestContext != null) {
-		//	System.out.println("Messages reçus! " + criticalCriterion.getName());
-			
-		//	System.out.println(blackBoxInput.getName());
-		//	System.out.println(bestContext.getName());
-
-			sendMessage(bestContext.getAction(), MessageType.VALUE, blackBoxInput);
-			Object[] infos = {criticalCriterion, criticalCriterion.getCriticity()};
-			sendMessage(infos, MessageType.SELECTION, bestContext);
-		}
-		else
-		{
-			sendMessage(0.1, MessageType.VALUE, blackBoxInput);  //TODO test only purpose
-			Context context = new Context(world, this);
-			context.setName(String.valueOf(context.hashCode()));
-			world.startAgent(context);
-			context.play();  //TODO dirty
+		if (oldCriticity.size() > 0) {			/*Let some time for initialisation*/
+			if (contexts.size() > 0) selectBestContext();
+			if (bestContext != null && bestContext.getPredictionFor(criticalCriterion) < 0) {
+				//	System.out.println("Messages reçus! " + criticalCriterion.getName());
+				
+				//	System.out.println(blackBoxInput.getName());
+				//	System.out.println(bestContext.getName());
+				action = bestContext.getAction();
+				sendMessage(action, MessageType.VALUE, blackBoxInput);
+				Object[] infos = {criticalCriterion, criticalCriterion.getCriticity()};
+				sendMessage(infos, MessageType.SELECTION, bestContext);
+			}
+			else
+			{
+				action = Math.random() * 10 - 5;
+				sendMessage(action, MessageType.VALUE, blackBoxInput);  //TODO test only purpose
+				Context context = new Context(world, this);
+				context.setName(String.valueOf(context.hashCode()));
+				world.startAgent(context);
+				//	context.play();  //TODO dirty
+			}
 		}
 		contexts.clear();
 		criticalCriterion = null;
@@ -73,6 +82,17 @@ public class Controller extends SystemAgent{
 		
 	}
 
+	/**
+	 * Save the old criticity before reading messages.
+	 */
+	public void readMessage() {
+		oldCriticity = new HashMap<Criterion,Double>(criticity);
+
+		super.readMessage();
+//		System.out.println("Old contro : "  + oldCriticity.toString());
+//		System.out.println("New contro : " + criticity.toString());
+	}
+	
 	public ArrayList<Context> getContexts() {
 		return contexts;
 	}
@@ -92,7 +112,7 @@ public class Controller extends SystemAgent{
 	private void selectBestContext() {
 		Context bc = contexts.get(0);
 		for (Context context : contexts) {
-			if (context.getPredictionFor(criticalCriterion) > bc.getPredictionFor(criticalCriterion)) {
+			if (context.getPredictionFor(criticalCriterion) < bc.getPredictionFor(criticalCriterion)) {
 				bc = context;
 			}
 		}
@@ -113,4 +133,37 @@ public class Controller extends SystemAgent{
 		return contexts;
 	}
 
+	public HashMap<Criterion, Double> getCriticity() {
+		return criticity;
+	}
+
+	public void setCriticity(HashMap<Criterion, Double> criticity) {
+		this.criticity = criticity;
+	}
+
+	public HashMap<Criterion, Double> getOldCriticity() {
+		return oldCriticity;
+	}
+
+	public void setOldCriticity(HashMap<Criterion, Double> oldCriticity) {
+		this.oldCriticity = oldCriticity;
+	}
+
+	public Criterion getCriticalCriterion() {
+		return criticalCriterion;
+	}
+
+	public void setCriticalCriterion(Criterion criticalCriterion) {
+		this.criticalCriterion = criticalCriterion;
+	}
+
+	public double getAction() {
+		return action;
+	}
+
+	public void setAction(double action) {
+		this.action = action;
+	}
+
+	
 }
