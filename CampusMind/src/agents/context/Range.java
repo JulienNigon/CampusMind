@@ -6,7 +6,8 @@ public class Range {
 	private double end;
 	private double value;
 	private double oldValue;
-	
+	public static final double mininimalRange = 1.0;
+
 	
 	
 	
@@ -49,15 +50,19 @@ public class Range {
 	public void fit() {
 		//TODO +% is good?
 		if (Math.abs(oldValue-start) > Math.abs(oldValue-end)) {
-			end = oldValue + Math.abs(0.001*oldValue);
+			end = oldValue + 0.001*(oldValue-end);
 		}
 		else {
-			start = oldValue - Math.abs(0.001*oldValue);
+			start = oldValue + 0.001*(oldValue-start);
 		}
 	}
 	
 	public String toString() {
 		return "["+start+","+end+"]" + "("+value+")" + " " + isChecked();
+	}
+	
+	public boolean isTooSmall() {
+		return (end - start) > mininimalRange;
 	}
 	
 	

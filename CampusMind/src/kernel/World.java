@@ -32,6 +32,7 @@ public class World {
 	private HashMap<NCS,Integer> allNCS = new HashMap<NCS,Integer>();
 	private HashMap<NCS,Integer> thisLoopNCS = new HashMap<NCS,Integer>();
 	private HashMap<String,Integer> numberOfAgents = new HashMap<String,Integer>();
+	private HashMap<NCS,Integer> numberOfNCS = new HashMap<NCS,Integer>();
 
 	
 	public World (Scheduler scheduler, File systemFile, BlackBox blackbox) {
@@ -44,6 +45,11 @@ public class World {
 		numberOfAgents.put("Variable", 0);
 		numberOfAgents.put("Controller", 0);
 		numberOfAgents.put("Criterion", 0);
+		
+		for (NCS ncs : NCS.values()) {
+			numberOfNCS.put(ncs, 0);			
+		}
+
 		
 		for (NCS ncs : NCS.values()) {
 			allNCS.put(ncs, 0);
@@ -198,6 +204,22 @@ public class World {
 		} else {
 			numberOfAgents.put(cl, x);
 		}
+	}
+	
+	public void changeNCSNumber(int x, NCS ncs) {
+		if (numberOfNCS.containsKey(ncs)) {
+			numberOfNCS.put(ncs, numberOfNCS.get(ncs) + x);
+		} else {
+			numberOfNCS.put(ncs, x);
+		}
+	}
+
+	public HashMap<NCS,Integer> getNumberOfNCS() {
+		return numberOfNCS;
+	}
+
+	public void setNumberOfNCS(HashMap<NCS,Integer> numberOfNCS) {
+		this.numberOfNCS = numberOfNCS;
 	}
 	
 	

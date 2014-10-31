@@ -7,6 +7,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import kernel.World;
+import ncs.NCS;
 
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -32,10 +33,10 @@ public class PanelChart extends JPanel implements ScheduledItem {
 	JFreeChart chartAgents;
 	XYSeriesCollection dataSetAgents;
 
-	/* Value chart */
-	ChartPanel chartPanelValue;
-	JFreeChart chartValue;
-	XYSeriesCollection datasetValue;
+	/* NCS chart */
+	ChartPanel chartPanelNCS;
+	JFreeChart chartNCS;
+	XYSeriesCollection dataSetNCS;
 
 	World world;
 
@@ -51,12 +52,12 @@ public class PanelChart extends JPanel implements ScheduledItem {
 		chartPanelAgents.setPreferredSize(new java.awt.Dimension(600, 400));
 		this.add(chartPanelAgents);
 
-		/* Create value chart */
-	/*	datasetValue = createDatasetValue();
-		JFreeChart chartValue = createChartValue();
-		chartPanelValue = new ChartPanel(chartValue);
-		chartPanelValue.setPreferredSize(new java.awt.Dimension(300, 200));
-		this.add(chartPanelValue);*/
+		/* Create NCS chart */
+		dataSetNCS = createDataSetNCS();
+		JFreeChart chartNCS = createChartNCS();
+		chartPanelNCS = new ChartPanel(chartNCS);
+		chartPanelNCS.setPreferredSize(new java.awt.Dimension(600, 400));
+		this.add(chartPanelNCS);
 
 	}
 
@@ -81,12 +82,14 @@ public class PanelChart extends JPanel implements ScheduledItem {
 
 	}
 
-	private XYSeriesCollection createDatasetValue() {
+	private XYSeriesCollection createDataSetNCS() {
 
 		XYSeriesCollection collection = new XYSeriesCollection();
 
-		collection.addSeries(new XYSeries("variable"));
-
+		
+		for (NCS ncs : NCS.values()) {
+			collection.addSeries(new XYSeries(ncs.toString()));
+		}
 		return collection;
 
 	}
@@ -114,12 +117,12 @@ public class PanelChart extends JPanel implements ScheduledItem {
 				JFreeChart.DEFAULT_TITLE_FONT, plot, true);
 	}
 
-	private JFreeChart createChartValue() {
+	private JFreeChart createChartNCS() {
 
 		// create subplot 1...
-		final XYDataset data1 = datasetValue;
+		final XYDataset data1 = dataSetNCS;
 		final XYItemRenderer renderer1 = new StandardXYItemRenderer();
-		final NumberAxis rangeAxis1 = new NumberAxis("Value");
+		final NumberAxis rangeAxis1 = new NumberAxis("Total number of NCS");
 		final XYPlot subplot1 = new XYPlot(data1, null, rangeAxis1, renderer1);
 		subplot1.setRangeAxisLocation(AxisLocation.BOTTOM_OR_LEFT);
 
@@ -133,7 +136,7 @@ public class PanelChart extends JPanel implements ScheduledItem {
 		plot.setOrientation(PlotOrientation.VERTICAL);
 
 		// return a new chart containing the overlaid plot...
-		return new JFreeChart("tracked variable over time",
+		return new JFreeChart("Total of NCS",
 				JFreeChart.DEFAULT_TITLE_FONT, plot, true);
 	}
 
@@ -142,14 +145,19 @@ public class PanelChart extends JPanel implements ScheduledItem {
 
 		int tick = world.getScheduler().getTick();
 		
+		dataSetAgents.getSeries("Criterion").add(
+				tick, world.getNumberOfAgents().get("Criterion"));
 		dataSetAgents.getSeries("Context").add(
 				tick, world.getNumberOfAgents().get("Context"));
 		dataSetAgents.getSeries("Variable").add(
 				tick, world.getNumberOfAgents().get("Variable"));
 		dataSetAgents.getSeries("Controller").add(
 				tick, world.getNumberOfAgents().get("Controller"));
-		dataSetAgents.getSeries("Criterion").add(
-				tick, world.getNumberOfAgents().get("Criterion"));
+
+		
+		for (NCS ncs : NCS.values()) {
+			dataSetNCS.getSeries(ncs.toString()).add(tick, world.getNumberOfNCS().get(ncs));
+		}
 
 	}
 

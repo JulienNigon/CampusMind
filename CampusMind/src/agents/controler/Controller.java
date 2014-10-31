@@ -15,19 +15,19 @@ import agents.messages.MessageType;
 
 public class Controller extends SystemAgent{
 
-	public Controller(World world) {
-		super(world);
-		// TODO Auto-generated constructor stub
-	}
 
 	private ArrayList<Context> contexts = new ArrayList<Context>();
 	private HashMap<Criterion,Double> criticity = new HashMap<Criterion,Double>();
 	private HashMap<Criterion,Double> oldCriticity = new HashMap<Criterion,Double>();
 	private Criterion criticalCriterion;
 	private Context bestContext;
+	private Context lastUsedContext;
 	private Input blackBoxInput;
 	private double action;
 
+	public Controller(World world) {
+		super(world);
+	}
 	
 
 	@Override
@@ -52,22 +52,21 @@ public class Controller extends SystemAgent{
 	
 	public void play() {
 
+		lastUsedContext = bestContext;
 		bestContext = null;
 		super.play();
 	//	System.out.println("context size : " + contexts.size());
 		if (oldCriticity.size() > 0) {			/*Let some time for initialisation*/
+			
 			if (contexts.size() > 0) selectBestContext();
 			if (bestContext != null && bestContext.getPredictionFor(criticalCriterion) <= 0) {
-				//	System.out.println("Messages reçus! " + criticalCriterion.getName());
-				
-				//	System.out.println(blackBoxInput.getName());
-				//	System.out.println(bestContext.getName());
+
 				action = bestContext.getAction();
-				sendMessage(action, MessageType.VALUE, blackBoxInput);
-				System.out.println("Résultat : " + action);
-				
+				sendMessage(action, MessageType.VALUE, blackBoxInput);				
 				Object[] infos = {criticalCriterion, criticalCriterion.getCriticity()};
 				sendMessage(infos, MessageType.SELECTION, bestContext);
+				if (lastUsedContext != null) sendExpressMessage(null, MessageType.ABORT, lastUsedContext);
+				
 			}
 			else
 			{
@@ -170,6 +169,16 @@ public class Controller extends SystemAgent{
 
 	public void setAction(double action) {
 		this.action = action;
+	}
+
+
+	public Context getLastUsedContext() {
+		return lastUsedContext;
+	}
+
+
+	public void setLastUsedContext(Context lastUsedContext) {
+		this.lastUsedContext = lastUsedContext;
 	}
 
 	

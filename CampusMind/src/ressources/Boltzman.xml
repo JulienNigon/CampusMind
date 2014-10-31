@@ -5,10 +5,9 @@
 		<Sensor Name="Sensor" Source="ConstanteGazParfait"></Sensor>
 		<Controller Name="Controller" InputTarget="Boltzman"></Controller>
 
-		<Criterion Name="Criterion_Min" Reference="8.3144621" CriticityType="LOWER">
+		<Criterion Name="Criterion_Focus" Reference="8.3144621" CriticityType="FOCUS">
 			<CriticalVariable Name="Sensor"></CriticalVariable></Criterion>
-		<Criterion Name="Criterion_Max" Reference="8.3144621" CriticityType="HIGHER">
-			<CriticalVariable Name="Sensor"></CriticalVariable></Criterion>
+
 			
 	</StartingAgents>
 </System>

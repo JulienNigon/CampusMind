@@ -18,6 +18,7 @@ public abstract class SystemAgent extends Agent{
 	
 	public SystemAgent(World world) {
 		this.world = world;
+	//	System.out.println(this.getClass().getSimpleName());
 		world.changeAgentNumber(1, this.getClass().getSimpleName());
 		// TODO Auto-generated constructor stub
 	}

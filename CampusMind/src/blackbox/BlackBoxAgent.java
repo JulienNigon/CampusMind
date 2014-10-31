@@ -21,6 +21,7 @@ public abstract class BlackBoxAgent extends Agent{
 	}
 	
 	public void readMessage() {
+//		System.out.println("Play : " + this.getName());
 		super.readMessage();
 		fastPlay();
 	}

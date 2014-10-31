@@ -11,10 +11,6 @@ import agents.messages.MessageType;
 
 public class Criterion extends SystemAgent{
 
-	public Criterion(World world) {
-		super(world);
-		// TODO Auto-generated constructor stub
-	}
 
 
 	private double criticity;
@@ -24,6 +20,9 @@ public class Criterion extends SystemAgent{
 	private ArrayList<Agent> targets = new ArrayList<Agent>();
 	private double value;
 
+	public Criterion(World world) {
+		super(world);
+	}
 	public void play() {
 		super.play();
 		for (Agent agent : targets) {
@@ -39,7 +38,7 @@ public class Criterion extends SystemAgent{
 			double temp = criticityType.computeCriticity((double)m.getContent(), reference);
 			variation = temp - criticity;
 			criticity = temp;
-			System.out.println(this.getName() + " : " + temp);
+//			System.out.println(this.getName() + " : " + temp);
 		}
 		if(m.getType() == MessageType.REGISTER) {
 			targets.add(m.getSender());

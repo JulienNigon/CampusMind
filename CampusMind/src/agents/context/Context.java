@@ -3,6 +3,7 @@ package agents.context;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import ncs.NCS;
 import kernel.World;
 import agents.Agent;
 import agents.SystemAgent;
@@ -27,17 +28,19 @@ public class Context extends SystemAgent{
 	private Criterion criticalCriterion;
 	private double lastCriticity;
 	private boolean selected = false;
-	private final double acceptedError = 0.01;  //TODO : to improve
+	private final double acceptedError = 0.0001;  //TODO : to improve
 	private boolean unselectable = false;
 	private boolean needPredictions = true;
-	
+	private boolean valid = false;
+	private boolean aborted = false;
+
 	public Context(World world, Controller controller) {
 		super(world);
 		action = controller.getAction();
 		this.controller = controller;
 		ArrayList<Variable> var = (ArrayList<Variable>) world.getAllAgentInstanceOf(Variable.class);
 		for (Variable v : var) {
-			ranges.put(v, new Range(v.getValue()-300,v.getValue()+300)); //TODO start range
+			ranges.put(v, new Range(v.getValue()-10,v.getValue()+10)); //TODO start range
 			ranges.get(v).setValue(v.getValue());
 			sendExpressMessage(null,MessageType.REGISTER,v);
 //			System.out.println("REQUEST SEND");
@@ -80,6 +83,8 @@ public class Context extends SystemAgent{
 			//TODO dirty
 			criticalCriterion = (Criterion) ((Object[])(m.getContent()))[0];
 			lastCriticity = (double) ((Object[])(m.getContent()))[1];
+		} else if (m.getType() == MessageType.ABORT) {
+			aborted = true;
 		}
 	}
 	
@@ -100,8 +105,10 @@ public class Context extends SystemAgent{
 			needPredictions = false;
 		}
 		
+		boolean predictionValidity = checkPredictionValidity();
+		
 		if (nSelection > 0) {  /*The context was selected*/
-			if (!checkPredictionValidity()) {  /*If predictions are false*/
+			if (!predictionValidity) {  /*If predictions are false*/
 				unselectable = true;
 				if (checkForNCS_FalsePredictions()) {
 					solveNCS_falsePredictions();
@@ -109,33 +116,45 @@ public class Context extends SystemAgent{
 					solveNCS_inexactPredictions();
 				}
 			}
-			solveNCS_inexactPredictions();
+			//solveNCS_inexactPredictions();
 			//TODO :improve
 		}
 		
 		if (nSelection >= 2) {
-//TODO			solveNCS_improductivity();
+			solveNCS_improductivity();
 		}
 		
+		/*Update the validity statue of the context*/
+		valid = checkRanges();
+		
 		/* If the context is valid, send a message to the controller.*/
-		if (checkRanges() && !unselectable) {
-			sendMessage(action, MessageType.PROPOSAL, controller);
+		if (valid && !unselectable) {
+			sendMessage(action, MessageType.PROPOSAL, controller);   //TODO : notifier des changements plutot?
 		}
+		
+		if (predictionValidity && aborted) {
+			solveNCS_Inproductive_Range();
+		}
+		
 		criticalCriterion = null;
 		lastCriticity = 0.00;
 		
 		selected = false;
 		unselectable = false;
+		aborted = false;
 	}
 	
 	private void solveNCS_improductivity() {
 		// TODO raise NCS
 		// TODO AVT
+		NCS.CONTEXT_IMPRODUCTIVE_ACTION.raiseNCS(world);
 		action += (0.01*action);
 	}
 
 	private void solveNCS_inexactPredictions() {  /*NCS 5 in Jeremy thesis*/
-		System.out.println("inexact prediction");
+//		System.out.println("inexact prediction");
+		NCS.CONTEXT_CONFLICT_INEXACT.raiseNCS(world);
+
 		// TODO : smooth the change
 		for (Criterion c : predictions.keySet()) {
 			predictions.put(c, criticity.get(c) - oldCriticity.get(c));
@@ -143,8 +162,16 @@ public class Context extends SystemAgent{
 		
 	}
 
+	private void solveNCS_Inproductive_Range() {  /*NCS 8 in Jeremy thesis*/
+		NCS.CONTEXT_IMPRODUCTIVE_RANGE.raiseNCS(world);
+		for (Variable v : ranges.keySet()) {
+			ranges.get(v).fit();
+		}		
+	}
+	
 	private void solveNCS_falsePredictions() {  /*NCS 4 in Jeremy thesis*/
 	//	System.out.println("false prediction");
+		NCS.CONTEXT_CONFLICT_FALSE.raiseNCS(world);
 		for (Variable v : ranges.keySet()) {
 			ranges.get(v).fit();
 		}		
@@ -152,15 +179,16 @@ public class Context extends SystemAgent{
 
 	/**
 	 * 
-	 * @return false if all criticity change according to predictions, else true.
+	 * @return false if all criticity change with the same sign that predictions, else true.
 	 */
 	public boolean checkForNCS_FalsePredictions() {
 		for (Criterion c : criticity.keySet()) {
-			if (predictions.get(c) * (criticity.get(c)-oldCriticity.get(c)) >= 0){  /*Check if the sign of variation is good*/
+			if (criticity.get(c)-oldCriticity.get(c) >= 0){  /*Check if the sign of variation is good*/
+	//			System.out.println(this.getName() + " est completement faux!!");
 				return true;
 			}
 		}
-		System.out.println("INEXACT");
+//		System.out.println("INEXACT");
 		return false;
 	}
 	
@@ -273,6 +301,14 @@ public class Context extends SystemAgent{
 
 	public int getNSelection() {
 		return nSelection;
+	}
+
+	public boolean isValid() {
+		return valid;
+	}
+
+	public void setValid(boolean valid) {
+		this.valid = valid;
 	}
 	
 
