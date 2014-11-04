@@ -16,6 +16,7 @@ public class Scheduler {
 
 	private ArrayList<Agent> agents = new ArrayList<Agent>();
 	private ArrayList<Agent> waitList = new ArrayList<Agent>();
+	private ArrayList<Agent> killList = new ArrayList<Agent>();
 	private ArrayList<ScheduledItem> scheduled = new ArrayList<ScheduledItem>();
 
 	private boolean running = false;
@@ -63,6 +64,11 @@ public class Scheduler {
 				}
 				waitList.clear();
 
+				for (Agent agent : killList) {
+					agents.remove(agent);
+				}
+				killList.clear();
+				
 				//Compute message
 				for (Agent agent : agents) {
 					agent.readMessage();
@@ -108,7 +114,8 @@ public class Scheduler {
 	}
 	
 	public void killAgent(Agent a) {
-		agents.remove(a);
+		killList.add(a);
+		//agents.remove(a);
 	}
 
 	public ArrayList<Agent> getAgents() {

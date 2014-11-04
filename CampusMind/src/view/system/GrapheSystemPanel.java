@@ -14,6 +14,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 import javax.swing.event.MouseInputListener;
@@ -27,6 +28,7 @@ import org.graphstream.ui.swingViewer.Viewer;
 import org.graphstream.ui.swingViewer.ViewerListener;
 import org.graphstream.ui.swingViewer.ViewerPipe;
 
+import view.system.paving.Panel1DPaving;
 import agents.Agent;
 import agents.SystemAgent;
 import agents.Variable;
@@ -332,7 +334,7 @@ public class GrapheSystemPanel extends JPanel implements ViewerListener, MouseIn
 			if (world.getAgents().get(id) instanceof Criterion) {
 				popupCriterion(id);
 			} else if (world.getAgents().get(id) instanceof Variable) {
-				popupPercept();
+				popupPercept(id);
 			}
 			
 			rightClick = false;
@@ -351,6 +353,15 @@ public class GrapheSystemPanel extends JPanel implements ViewerListener, MouseIn
 		frame.pack();
 	}
 	
+	private void startPanel1DPaving(String id) {
+		Panel1DPaving pan = new Panel1DPaving((Variable) world.getAgents().get(id), world);
+		JFrame frame = new JFrame(id);
+		world.getScheduler().addScheduledItem(pan);
+		frame.setContentPane(new JScrollPane(pan));
+		frame.setVisible(true);
+		frame.pack();
+	}
+	
 	public void popupCriterion(String id){
 		
 		JPopupMenu popup = new JPopupMenu("Criterion");
@@ -362,11 +373,11 @@ public class GrapheSystemPanel extends JPanel implements ViewerListener, MouseIn
 		popup.show(this, this.getX() + mouseEvent.getX(), this.getY() + mouseEvent.getY());
 	}
 	
-	public void popupPercept(){
+	public void popupPercept(String id){
 					
 		JPopupMenu popup = new JPopupMenu("Percept");
 		JMenuItem itemShow1DPaving = new JMenuItem("Show 1D paving");
-	//	editerAction.addActionListener(new ActionsMenuActions(this,0,a));
+		itemShow1DPaving.addActionListener(e -> {startPanel1DPaving(id);});
 		itemShow1DPaving.setIcon(Config.getIcon("pencil.png"));
 		popup.add(itemShow1DPaving);
 		

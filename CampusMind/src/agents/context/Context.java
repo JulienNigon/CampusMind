@@ -104,6 +104,10 @@ public class Context extends SystemAgent{
 //				System.out.println("New : " + criticity.toString());
 				predictions.put(c, criticity.get(c) - oldCriticity.get(c));
 			}
+			//TODO : experimental
+			if (countGoodPredictions() == 0) {
+				this.die();
+			}
 			needPredictions = false;
 		}
 		
@@ -341,6 +345,14 @@ public class Context extends SystemAgent{
 			sendExpressMessage(null,MessageType.UNREGISTER,c);
 		}
 		world.kill(this);
+	}
+	
+	public int countGoodPredictions() {
+		int n = 0;
+		for (Criterion c : predictions.keySet()) {
+			if (predictions.get(c) <= 0) n++;
+		}
+		return n;
 	}
 
 
