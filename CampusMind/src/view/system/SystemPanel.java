@@ -77,24 +77,28 @@ public class SystemPanel extends JPanel{
 			data[0] = a.getClass().getSimpleName();
 			data[1] = a.getName();
 			data[2] = a.getID();
-			data[3] = a.getMessagesBin();
+			
 			if (a instanceof Controller) {
+				data[3] = a.getMessagesBin();
 				data[4] = ((Controller) a).getBestContext();
 				nController++;
 				tableModel.insertRow(nCriterion+nVariable,data);
 
 			}
 			if (a instanceof Variable) {
+				data[3] = a.getMessagesBin();
 				data[4] = ((Variable) a).getValue();
 				nVariable++;
 				tableModel.insertRow(nCriterion,data);
 			}
 			if (a instanceof Criterion) {
+				data[3] = a.getMessagesBin();
 				data[4] = ((Criterion) a).getCriticity();
 				data[5] = "Var : " + ((Criterion) a).getVariation();
 				nCriterion++;
 				tableModel.insertRow(0,data);
 			} else if (a instanceof Context) {
+				data[3] = "Select : " + ((Context)a).getNSelection();
 				nContext++;
 				tableModel.addRow(data);				
 			}

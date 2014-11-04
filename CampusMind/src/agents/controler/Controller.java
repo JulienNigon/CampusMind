@@ -61,15 +61,20 @@ public class Controller extends SystemAgent{
 			if (contexts.size() > 0) selectBestContext();
 			if (bestContext != null && bestContext.getPredictionFor(criticalCriterion) <= 0) {
 
+				System.out.println(bestContext);
+				
 				action = bestContext.getAction();
 				sendMessage(action, MessageType.VALUE, blackBoxInput);				
 				Object[] infos = {criticalCriterion, criticalCriterion.getCriticity()};
 				sendMessage(infos, MessageType.SELECTION, bestContext);
-				if (lastUsedContext != null) sendExpressMessage(null, MessageType.ABORT, lastUsedContext);
+				if (lastUsedContext != null && lastUsedContext != bestContext) sendExpressMessage(null, MessageType.ABORT, lastUsedContext);
 				
 			}
 			else
 			{
+				System.out.println("no good context");
+				System.out.println("Propositions reçues : " + contexts.size());
+
 				if (criticity.get(criticalCriterion) - oldCriticity.get(criticalCriterion) < 0) {
 					// 
 				} else {

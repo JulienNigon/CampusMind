@@ -34,6 +34,8 @@ public class Variable extends SystemAgent{
 	public void computeAMessage(Message m) {
 		if(m.getType() == MessageType.REGISTER) {
 			targets.add(m.getSender());
+		} else if(m.getType() == MessageType.UNREGISTER) {
+			targets.remove(m.getSender());
 		}
 	}
 

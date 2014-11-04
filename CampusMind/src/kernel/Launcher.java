@@ -35,7 +35,6 @@ public class Launcher {
 	//	f.setContentPane(pan);
 	//	f.setVisible(true);
 		
-        Graph graph = new SingleGraph("Tutorial 1");
         
 
 
@@ -63,12 +62,14 @@ public class Launcher {
 
 		BlackBox blackBox = new BlackBox(scheduler, new File(System
 				.getProperty("user.dir")
+				+ "/bin/ressources/Equation_2_inconnues.xml"));
+		//		+ "/bin/ressources/Boltzman_simulator.xml"));
 		//		+ "/bin/ressources/BlackBox.xml"));
-				+ "/bin/ressources/Boltzman_simulator.xml"));
 		World world = new World(scheduler,
 				new File(System.getProperty("user.dir")
+						+ "/bin/ressources/Solver_equation_2_inconnues.xml"),
+		//				+ "/bin/ressources/Boltzman.xml"),
 		//				+ "/bin/ressources/System.xml"),
-						+ "/bin/ressources/Boltzman.xml"),
 						blackBox);
 		world.setBlackBox(blackBox);
 

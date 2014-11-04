@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BlackBox>
+
+	<Inputs>
+		<Input Name="a" DefaultValue="10">
+			<Target Name="ax"></Target>
+		</Input>
+		<Input Name="b" DefaultValue="3">
+			<Target Name="by"></Target>
+		</Input>
+		<Input Name="dx" DefaultValue="0">
+			<Target Name="x"></Target>
+		</Input>
+		<Input Name="dy" DefaultValue="0">
+			<Target Name="y"></Target>
+		</Input>
+	</Inputs>
+		
+	<Outputs>
+		<Output Name="z" DefaultValue="0"></Output>	
+	</Outputs>
+	
+			
+
+			
+	<Functions>
+	
+		<Function Name="Somme" Func="PLUS">
+			<Target Name="z"></Target>
+			<InputA Name="ax"></InputA>
+			<InputB Name="by"></InputB></Function>
+			
+		<Function Name="ax" Func="MULT">
+			<Target Name="Somme"></Target>
+			<InputA Name="a"></InputA>
+			<InputB Name="x"></InputB></Function>
+
+		<Function Name="by" Func="MULT">
+			<Target Name="Somme"></Target>
+			<InputA Name="b"></InputA>
+			<InputB Name="y"></InputB></Function>	
+
+		<Function Name="x" Func="PLUS">
+			<Target Name="ax"></Target>
+			<Target Name="x"></Target>
+			<InputA Name="x"></InputA>
+			<InputB Name="dx"></InputB></Function>
+			
+		<Function Name="y" Func="PLUS">
+			<Target Name="by"></Target>
+			<Target Name="y"></Target>
+			<InputA Name="y"></InputA>
+			<InputB Name="dy"></InputB></Function>
+			
+	</Functions>
+			
+</BlackBox>

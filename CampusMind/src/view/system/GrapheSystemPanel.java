@@ -11,7 +11,9 @@ import java.awt.event.MouseEvent;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 import javax.swing.event.MouseInputListener;
@@ -27,6 +29,7 @@ import org.graphstream.ui.swingViewer.ViewerPipe;
 
 import agents.Agent;
 import agents.SystemAgent;
+import agents.Variable;
 import agents.context.Context;
 import agents.criterion.Criterion;
 import blackbox.BlackBox;
@@ -55,6 +58,7 @@ public class GrapheSystemPanel extends JPanel implements ViewerListener, MouseIn
 	private JButton buttonDisableAutoLayout;
 
 	private int viewMode = 0;
+	private MouseEvent mouseEvent;
 
 
 	public GrapheSystemPanel() {
@@ -326,12 +330,9 @@ public class GrapheSystemPanel extends JPanel implements ViewerListener, MouseIn
 		
 		if (rightClick) {
 			if (world.getAgents().get(id) instanceof Criterion) {
-				PanelCriterion pan = new PanelCriterion((Criterion) world.getAgents().get(id), world);
-				JFrame frame = new JFrame(id);
-				world.getScheduler().addScheduledItem(pan);
-				frame.setContentPane(pan);
-				frame.setVisible(true);
-				frame.pack();
+				popupCriterion(id);
+			} else if (world.getAgents().get(id) instanceof Variable) {
+				popupPercept();
 			}
 			
 			rightClick = false;
@@ -339,6 +340,37 @@ public class GrapheSystemPanel extends JPanel implements ViewerListener, MouseIn
 
 
 		
+	}
+	
+	private void startPanelCriterion(String id) {
+		PanelCriterion pan = new PanelCriterion((Criterion) world.getAgents().get(id), world);
+		JFrame frame = new JFrame(id);
+		world.getScheduler().addScheduledItem(pan);
+		frame.setContentPane(pan);
+		frame.setVisible(true);
+		frame.pack();
+	}
+	
+	public void popupCriterion(String id){
+		
+		JPopupMenu popup = new JPopupMenu("Criterion");
+		JMenuItem itemChartCriterion = new JMenuItem("Show charts");
+		itemChartCriterion.addActionListener(e -> {startPanelCriterion(id);});
+		itemChartCriterion.setIcon(Config.getIcon("pencil.png"));
+		popup.add(itemChartCriterion);
+		
+		popup.show(this, this.getX() + mouseEvent.getX(), this.getY() + mouseEvent.getY());
+	}
+	
+	public void popupPercept(){
+					
+		JPopupMenu popup = new JPopupMenu("Percept");
+		JMenuItem itemShow1DPaving = new JMenuItem("Show 1D paving");
+	//	editerAction.addActionListener(new ActionsMenuActions(this,0,a));
+		itemShow1DPaving.setIcon(Config.getIcon("pencil.png"));
+		popup.add(itemShow1DPaving);
+		
+		popup.show(this, this.getX() + mouseEvent.getX(), this.getY() + mouseEvent.getY());
 	}
 
 	@Override
@@ -355,6 +387,7 @@ public class GrapheSystemPanel extends JPanel implements ViewerListener, MouseIn
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
+		mouseEvent = e;
 		if(SwingUtilities.isRightMouseButton(e)){
 			rightClick = true;
 			Robot bot;

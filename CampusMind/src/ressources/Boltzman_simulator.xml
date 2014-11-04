@@ -5,7 +5,7 @@
 		<Input Name="Avogadro" DefaultValue="6.02214129">
 			<Target Name="Func"></Target>
 		</Input>
-		<Input Name="Boltzman" DefaultValue="100">
+		<Input Name="Boltzman" DefaultValue="5">
 			<Target Name="Tempo"></Target>
 		</Input>
 	</Inputs>

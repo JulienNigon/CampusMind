@@ -7,6 +7,7 @@ public class Range {
 	private double value;
 	private double oldValue;
 	public static final double mininimalRange = 1.0;
+	private final double percentFitness = 0.05;
 
 	
 	
@@ -50,10 +51,12 @@ public class Range {
 	public void fit() {
 		//TODO +% is good?
 		if (Math.abs(oldValue-start) > Math.abs(oldValue-end)) {
-			end = oldValue + 0.001*(oldValue-end);
+			end = oldValue 
+					/*+ percentFitness*(oldValue-end)*/;
 		}
 		else {
-			start = oldValue + 0.001*(oldValue-start);
+			start = oldValue
+					/*+ percentFitness*(oldValue-start)*/;
 		}
 	}
 	
@@ -62,7 +65,7 @@ public class Range {
 	}
 	
 	public boolean isTooSmall() {
-		return (end - start) > mininimalRange;
+		return (end - start) < mininimalRange;
 	}
 	
 	

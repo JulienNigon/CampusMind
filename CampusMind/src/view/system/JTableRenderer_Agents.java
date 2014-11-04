@@ -47,7 +47,7 @@ public class JTableRenderer_Agents extends DefaultTableCellRenderer {
 
 		}
 		else if (value instanceof Stack<?> && !((Stack<?>) value).isEmpty()){
-			if (((Stack<?>) value).get(0) instanceof Message) {
+			if (((Stack<?>) value).get(0) instanceof Message && ((Stack<?>) value).size() < 10){
 				Stack<Message> stack = ((Stack<Message>) value);
 				Stack<Message> newStack = new Stack<Message>();
 				this.setText("");

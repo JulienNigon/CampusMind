@@ -221,6 +221,11 @@ public class World {
 	public void setNumberOfNCS(HashMap<NCS,Integer> numberOfNCS) {
 		this.numberOfNCS = numberOfNCS;
 	}
+
+	public void kill(Agent agent) {
+		agents.remove(agent.getName());
+		scheduler.killAgent(agent);
+	}
 	
 	
 }

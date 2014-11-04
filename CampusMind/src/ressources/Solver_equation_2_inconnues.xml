@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<System>
+	<StartingAgents>
+	
+		<Sensor Name="Sensor" Source="z"></Sensor>
+		<Controller Name="ControllerX" InputTarget="dx"></Controller>
+		<Controller Name="ControllerY" InputTarget="dy"></Controller>
+
+		<Criterion Name="Criterion_Focus" Reference="47" CriticityType="FOCUS">
+			<CriticalVariable Name="Sensor"></CriticalVariable></Criterion>
+
+			
+	</StartingAgents>
+</System>

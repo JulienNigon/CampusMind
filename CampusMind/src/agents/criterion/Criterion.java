@@ -42,6 +42,8 @@ public class Criterion extends SystemAgent{
 		}
 		if(m.getType() == MessageType.REGISTER) {
 			targets.add(m.getSender());
+		} else if(m.getType() == MessageType.UNREGISTER) {
+			targets.remove(m.getSender());
 		}
 		
 	}

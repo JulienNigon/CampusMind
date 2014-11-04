@@ -28,7 +28,7 @@ public class Context extends SystemAgent{
 	private Criterion criticalCriterion;
 	private double lastCriticity;
 	private boolean selected = false;
-	private final double acceptedError = 0.0001;  //TODO : to improve
+	private final double acceptedError = 0.000000001;  //TODO : to improve
 	private boolean unselectable = false;
 	private boolean needPredictions = true;
 	private boolean valid = false;
@@ -40,13 +40,14 @@ public class Context extends SystemAgent{
 		this.controller = controller;
 		ArrayList<Variable> var = (ArrayList<Variable>) world.getAllAgentInstanceOf(Variable.class);
 		for (Variable v : var) {
-			ranges.put(v, new Range(v.getValue()-10,v.getValue()+10)); //TODO start range
+			ranges.put(v, new Range(v.getValue()-200,v.getValue()+200)); //TODO start range
 			ranges.get(v).setValue(v.getValue());
 			sendExpressMessage(null,MessageType.REGISTER,v);
 //			System.out.println("REQUEST SEND");
 		}
 		ArrayList<Criterion> tempCrit = (ArrayList<Criterion>) world.getAllAgentInstanceOf(Criterion.class);
 		for (Criterion c : tempCrit) {
+			System.out.println("put prediction : " + c.getName());
 			predictions.put(c, 1.00); //TODO start range
 			sendExpressMessage(null,MessageType.REGISTER,c);
 		}
@@ -61,7 +62,7 @@ public class Context extends SystemAgent{
 	 */
 	public void readMessage() {
 		
-		if (!needPredictions) oldCriticity = new HashMap<Criterion,Double>(criticity);
+//		if (!needPredictions) oldCriticity = new HashMap<Criterion,Double>(criticity);
 		super.readMessage();
 	}
 	
@@ -73,6 +74,7 @@ public class Context extends SystemAgent{
 				ranges.get(m.getSender()).setValue((Double)m.getContent());
 			}
 			else if(m.getSender() instanceof Criterion) {
+				oldCriticity.put((Criterion) m.getSender(), criticity.get((Criterion) m.getSender()));
 				criticity.put((Criterion) m.getSender(), (Double)m.getContent());
 			}
 			
@@ -98,19 +100,22 @@ public class Context extends SystemAgent{
 		/*Init the new predictions*/
 		if (this.needPredictions) {
 			for (Criterion c : predictions.keySet()) {
-	//			System.out.println("Old : "  + oldCriticity.toString());
-	//			System.out.println("New : " + criticity.toString());
+//				System.out.println("Old : "  + oldCriticity.toString());
+//				System.out.println("New : " + criticity.toString());
 				predictions.put(c, criticity.get(c) - oldCriticity.get(c));
 			}
 			needPredictions = false;
 		}
 		
+//		System.out.println(this.getName() + " : " + (criticity.get(criticity.keySet().toArray()[0]) - oldCriticity.get(oldCriticity.keySet().toArray()[0])));
+		
+		
 		boolean predictionValidity = checkPredictionValidity();
 		
 		if (nSelection > 0) {  /*The context was selected*/
 			if (!predictionValidity) {  /*If predictions are false*/
-				unselectable = true;
 				if (checkForNCS_FalsePredictions()) {
+					unselectable = true;
 					solveNCS_falsePredictions();
 				} else {
 					solveNCS_inexactPredictions();
@@ -136,6 +141,12 @@ public class Context extends SystemAgent{
 			solveNCS_Inproductive_Range();
 		}
 		
+		for (Variable key : ranges.keySet()) {
+			if (ranges.get(key).isTooSmall()) {
+				solveNCS_uselessness();
+			}
+		}
+		
 		criticalCriterion = null;
 		lastCriticity = 0.00;
 		
@@ -144,11 +155,16 @@ public class Context extends SystemAgent{
 		aborted = false;
 	}
 	
-	private void solveNCS_improductivity() {
+	private void solveNCS_uselessness() {
+		NCS.CONTEXT_USELESSNESS.raiseNCS(world);
+		this.die();
+	}
+
+	private void solveNCS_improductivity() {  /*NCS 7 in Jeremy thesis*/
 		// TODO raise NCS
 		// TODO AVT
 		NCS.CONTEXT_IMPRODUCTIVE_ACTION.raiseNCS(world);
-		action += (0.01*action);
+//		action += (0.01*action);
 	}
 
 	private void solveNCS_inexactPredictions() {  /*NCS 5 in Jeremy thesis*/
@@ -284,6 +300,7 @@ public class Context extends SystemAgent{
 		
 	}
 	
+
 	public String toString() {
 		String s = "";
 		s += "Context : " + getName() + "\n";
@@ -311,6 +328,20 @@ public class Context extends SystemAgent{
 		this.valid = valid;
 	}
 	
+	/**
+	 * Remove all the references in other agents and remove the agent from the scheduler.
+	 */
+	public void die() {
+		ArrayList<Variable> var = (ArrayList<Variable>) world.getAllAgentInstanceOf(Variable.class);
+		for (Variable v : var) {
+			sendExpressMessage(null,MessageType.UNREGISTER,v);
+		}
+		ArrayList<Criterion> tempCrit = (ArrayList<Criterion>) world.getAllAgentInstanceOf(Criterion.class);
+		for (Criterion c : tempCrit) {
+			sendExpressMessage(null,MessageType.UNREGISTER,c);
+		}
+		world.kill(this);
+	}
 
 
 

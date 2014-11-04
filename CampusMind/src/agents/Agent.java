@@ -39,6 +39,7 @@ public abstract class Agent {
 
 	public Stack<Message> getMessages() {
 		return messages;
+		
 	}
 
 	public void setMessages(Stack<Message> messages) {
