@@ -3,6 +3,8 @@ package agents.controler;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.sun.org.apache.xerces.internal.impl.xpath.XPath.Step;
+
 import kernel.World;
 import blackbox.Input;
 import agents.Agent;
@@ -24,6 +26,12 @@ public class Controller extends SystemAgent{
 	private Context lastUsedContext;
 	private Input blackBoxInput;
 	private double action;
+	private boolean newActionPossible = true;
+	
+	/*Limit the effector capacity*/
+	private double maxAction = 1;
+	private double minAction = -1;
+	private double step = 0.01;
 
 	public Controller(World world) {
 		super(world);
@@ -67,7 +75,6 @@ public class Controller extends SystemAgent{
 				sendMessage(action, MessageType.VALUE, blackBoxInput);				
 				Object[] infos = {criticalCriterion, criticalCriterion.getCriticity()};
 				sendMessage(infos, MessageType.SELECTION, bestContext);
-				if (lastUsedContext != null && lastUsedContext != bestContext) sendExpressMessage(null, MessageType.ABORT, lastUsedContext);
 				
 			}
 			else
@@ -75,22 +82,59 @@ public class Controller extends SystemAgent{
 				System.out.println("no good context");
 				System.out.println("Propositions reçues : " + contexts.size());
 
-				if (criticity.get(criticalCriterion) - oldCriticity.get(criticalCriterion) < 0) {
-					// 
-				} else {
-					action = Math.random() * 2 - 1;
-				}
-				sendMessage(action, MessageType.VALUE, blackBoxInput);  //TODO test only purpose
-				Context context = new Context(world, this);
-				context.setName(String.valueOf(context.hashCode()));
-				world.startAgent(context);
+
+
+			//		action = (Math.random() * ((maxAction/step)+(minAction/step))) - minAction/step;
+			//		action = randomStep()*step;
+					action = selectNewAction();
+					if (newActionPossible) {
+						bestContext = null;
+						sendMessage(action, MessageType.VALUE, blackBoxInput);
+						Context context = new Context(world, this);
+						context.setName(String.valueOf(context.hashCode()));
+						world.startAgent(context);
+					} else {
+						newActionPossible = true;
+					}
+				
+
 				//	context.play();  //TODO dirty
 			}
+			if (lastUsedContext != null && lastUsedContext != bestContext) sendExpressMessage(null, MessageType.ABORT, lastUsedContext);
 		}
 		contexts.clear();
 		criticalCriterion = null;
 
 		
+	}
+	
+	private double selectNewAction() {
+		int s = randomStep();
+		int startingStep = s;
+		
+		do {
+			if (s > (int)(maxAction/step)) {
+				s = (int)(minAction/step);
+			}
+			
+			boolean checked = false;
+			for (Context context : contexts) {
+				if (context.getAction() == s*step) {
+					checked = true;
+				}
+			}
+			if (!checked) {
+				return s*step;
+			}
+			s++;
+		} while (startingStep != s);
+		
+		//TODO gerer si toutes les actions possibles
+		return s*step;
+	}
+
+	public int randomStep() {
+		return (int) ((Math.random() * (double)((int)(maxAction/step)-(int)(minAction/step))) + (int)(minAction/step));
 	}
 
 	/**

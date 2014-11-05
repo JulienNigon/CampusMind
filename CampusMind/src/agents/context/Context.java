@@ -105,9 +105,9 @@ public class Context extends SystemAgent{
 				predictions.put(c, criticity.get(c) - oldCriticity.get(c));
 			}
 			//TODO : experimental
-			if (countGoodPredictions() == 0) {
-				this.die();
-			}
+//			if (countGoodPredictions() == 0) {
+//				this.die();
+//			}
 			needPredictions = false;
 		}
 		

@@ -15,7 +15,10 @@ public class Panel1DPaving extends JJPanel implements ScheduledItem{
 	private ArrayList<Context> referencedContexts = new ArrayList<Context>();
 	private ArrayList<PavingContext> pavingContexts = new ArrayList<PavingContext>();
 	private MonoDimensionLine monoDimensionLine;
+	private CurrentValueLine currentValueLine;
 	
+	public static final int heightPavingContext = 20;
+
 	private double length;
 	private double min;
 	private double max;
@@ -57,7 +60,8 @@ public class Panel1DPaving extends JJPanel implements ScheduledItem{
 		
 			System.out.println(min + " " + max);
 			if (monoDimensionLine == null) {
-				this.add(new MonoDimensionLine(this, 0, 0, min, max,1.0));
+				monoDimensionLine = new MonoDimensionLine(this, 0, 0, min, max,1.0);
+				this.add(monoDimensionLine);
 			}
 			else {
 				monoDimensionLine.update(min,max);
@@ -75,6 +79,31 @@ public class Panel1DPaving extends JJPanel implements ScheduledItem{
 				//TODO remove context!
 			}
 			
+			nContext = 0;
+			ArrayList<PavingContext> toRemove = new ArrayList<PavingContext>();
+			for (PavingContext pc : pavingContexts) {
+				
+				if(!contexts.contains(pc.getContext())) {
+					this.remove(pc);
+					this.referencedContexts.remove(pc.getContext());
+					toRemove.add(pc);
+				}
+				else {
+					pc.setIndex(nContext);
+					nContext++;
+				}
+			}
+			
+			for (PavingContext pc : toRemove) {
+				pavingContexts.remove(pc);
+			}
+			
+			if (currentValueLine == null) {
+				System.out.println("Create current value line");
+				currentValueLine = new CurrentValueLine(this, 0, 0,this, 1.0, variable);
+				this.add(currentValueLine);
+			}
+
 			
 		}
 		
@@ -128,6 +157,16 @@ public class Panel1DPaving extends JJPanel implements ScheduledItem{
 
 	public void setVariable(Variable variable) {
 		this.variable = variable;
+	}
+
+
+	public int getnContext() {
+		return nContext;
+	}
+
+
+	public void setnContext(int nContext) {
+		this.nContext = nContext;
 	}
 	
 	

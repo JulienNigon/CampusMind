@@ -27,9 +27,11 @@ public class MonoDimensionLine extends JJComponent{
 	@Override
 	public void paintComponent(Graphics g) 
 	{   
-		
+//		System.out.println("Paint mono dimension line");
+
 		Graphics2D g2d = genererContexte(g);
 		g2d.setColor(Color.BLACK);
+		setW(((end - start)*scale));
 		g2d.fillRect(0, 0, (int)((end - start)*scale), width);
 		if (start < 0) {
 			g2d.setColor(Color.RED);
