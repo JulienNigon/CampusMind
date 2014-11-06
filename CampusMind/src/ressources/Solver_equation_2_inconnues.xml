@@ -3,10 +3,11 @@
 	<StartingAgents>
 	
 		<Sensor Name="Sensor" Source="z"></Sensor>
+		<Sensor Name="InputY" Source="dy"></Sensor>
 		<Controller Name="ControllerX" InputTarget="dx"></Controller>
 		<Controller Name="ControllerY" InputTarget="dy"></Controller>
 
-		<Criterion Name="Criterion_Focus" Reference="47" CriticityType="FOCUS">
+		<Criterion Name="Criterion_Focus" Reference="70" CriticityType="FOCUS">
 			<CriticalVariable Name="Sensor"></CriticalVariable></Criterion>
 
 			

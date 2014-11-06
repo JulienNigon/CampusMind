@@ -8,21 +8,23 @@ import agents.criterion.Criterion;
 import agents.messages.Message;
 import agents.messages.MessageType;
 
-public class Variable extends SystemAgent{
+public class Percept extends SystemAgent{
 
 
 
+	private double oldValue;
 	private double value;
 	private BlackBoxAgent sensor;
 	protected ArrayList<Agent> targets = new ArrayList<Agent>();
 
-	public Variable(World world) {
+	public Percept(World world) {
 		super(world);
 		// TODO Auto-generated constructor stub
 	}
 	
 	public void play() {
 		super.play();
+		oldValue = value;
 		value = sensor.getValue();  //TODO real acquisition
 		for (Agent target : targets) {
 			sendMessage(value,MessageType.VALUE,target);
@@ -66,6 +68,14 @@ public class Variable extends SystemAgent{
 	public void addTarget(Agent a) {
 		targets.add(a);
 		
+	}
+
+	public double getOldValue() {
+		return oldValue;
+	}
+
+	public void setOldValue(double oldValue) {
+		this.oldValue = oldValue;
 	}
 
 

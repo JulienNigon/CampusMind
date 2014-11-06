@@ -7,7 +7,7 @@ import ncs.NCS;
 import kernel.World;
 import agents.Agent;
 import agents.SystemAgent;
-import agents.Variable;
+import agents.Percept;
 import agents.controler.Controller;
 import agents.criterion.Criterion;
 import agents.messages.Message;
@@ -17,7 +17,7 @@ public class Context extends SystemAgent{
 
 
 
-	private HashMap<Variable,Range> ranges = new HashMap<Variable,Range>();
+	private HashMap<Percept,Range> ranges = new HashMap<Percept,Range>();
 	//TODO : hashmap is probably too much
 	private HashMap<Criterion,Double> predictions = new HashMap<Criterion,Double>();
 	private HashMap<Criterion,Double> criticity = new HashMap<Criterion,Double>();
@@ -28,19 +28,24 @@ public class Context extends SystemAgent{
 	private Criterion criticalCriterion;
 	private double lastCriticity;
 	private boolean selected = false;
-	private final double acceptedError = 0.000000001;  //TODO : to improve
+	private final double acceptedError = 0.000001;  //TODO : to improve
 	private boolean unselectable = false;
 	private boolean needPredictions = true;
 	private boolean valid = false;
 	private boolean aborted = false;
+	private boolean firstTimePeriod = true;
+	static final double extendedRangeAtCreation = 0.02;
 
 	public Context(World world, Controller controller) {
 		super(world);
 		action = controller.getAction();
 		this.controller = controller;
-		ArrayList<Variable> var = (ArrayList<Variable>) world.getAllAgentInstanceOf(Variable.class);
-		for (Variable v : var) {
-			ranges.put(v, new Range(v.getValue()-200,v.getValue()+200)); //TODO start range
+		ArrayList<Percept> var = (ArrayList<Percept>) world.getAllAgentInstanceOf(Percept.class);
+		for (Percept v : var) {
+			Range r =  new Range(-200,200,0);
+			r.setStartingValue(v.getValue());
+			ranges.put(v, r); //TODO start range
+	//		ranges.put(v, new Range(Double.MIN_VALUE,Double.MAX_VALUE,0)); //TODO start range
 			ranges.get(v).setValue(v.getValue());
 			sendExpressMessage(null,MessageType.REGISTER,v);
 //			System.out.println("REQUEST SEND");
@@ -69,7 +74,7 @@ public class Context extends SystemAgent{
 	@Override
 	public void computeAMessage(Message m) {
 		if (m.getType() == MessageType.VALUE) {
-			if(m.getSender() instanceof Variable) {
+			if(m.getSender() instanceof Percept) {
 	//			System.out.println(m.getContent());
 				ranges.get(m.getSender()).setValue((Double)m.getContent());
 			}
@@ -87,6 +92,8 @@ public class Context extends SystemAgent{
 			lastCriticity = (double) ((Object[])(m.getContent()))[1];
 		} else if (m.getType() == MessageType.ABORT) {
 			aborted = true;
+		} else if (m.getType() == MessageType.KILL) {
+			this.die();
 		}
 	}
 	
@@ -145,7 +152,18 @@ public class Context extends SystemAgent{
 			solveNCS_Inproductive_Range();
 		}
 		
-		for (Variable key : ranges.keySet()) {
+		if (firstTimePeriod && aborted) {
+			for (Percept v : ranges.keySet()) {
+				double min = Math.min(ranges.get(v).getOldValue(), ranges.get(v).getStartingValue());
+				double max = Math.max(ranges.get(v).getOldValue(), ranges.get(v).getStartingValue());
+
+				ranges.get(v).setStart(min - Math.abs(min*extendedRangeAtCreation));
+				ranges.get(v).setEnd(max + Math.abs(max*extendedRangeAtCreation));
+			}
+			firstTimePeriod = false;
+		}
+		
+		for (Percept key : ranges.keySet()) {
 			if (ranges.get(key).isTooSmall()) {
 				solveNCS_uselessness();
 			}
@@ -184,15 +202,15 @@ public class Context extends SystemAgent{
 
 	private void solveNCS_Inproductive_Range() {  /*NCS 8 in Jeremy thesis*/
 		NCS.CONTEXT_IMPRODUCTIVE_RANGE.raiseNCS(world);
-		for (Variable v : ranges.keySet()) {
-			ranges.get(v).fit();
-		}		
+		for (Percept v : ranges.keySet()) {
+		//	ranges.get(v).fit();
+		}	//TODO	
 	}
 	
 	private void solveNCS_falsePredictions() {  /*NCS 4 in Jeremy thesis*/
 	//	System.out.println("false prediction");
 		NCS.CONTEXT_CONFLICT_FALSE.raiseNCS(world);
-		for (Variable v : ranges.keySet()) {
+		for (Percept v : ranges.keySet()) {
 			ranges.get(v).fit();
 		}		
 	}
@@ -237,7 +255,7 @@ public class Context extends SystemAgent{
 	}
 
 	public boolean checkRanges() {
-		for (Variable v : ranges.keySet()) {
+		for (Percept v : ranges.keySet()) {
 	//		System.out.println("-----------");
 	//		System.out.println(ranges.get(v).getStart() + " " + ranges.get(v).getEnd() + " " + ranges.get(v).getValue());
 
@@ -250,11 +268,11 @@ public class Context extends SystemAgent{
 		return true;
 	}
 	
-	public HashMap<Variable, Range> getRanges() {
+	public HashMap<Percept, Range> getRanges() {
 		return ranges;
 	}
 
-	public void setRanges(HashMap<Variable, Range> ranges) {
+	public void setRanges(HashMap<Percept, Range> ranges) {
 		this.ranges = ranges;
 	}
 
@@ -311,7 +329,7 @@ public class Context extends SystemAgent{
 		for (Criterion c : predictions.keySet()) {
 			s +=c.getName() + " will change by " + predictions.get(c).toString() + "\n";
 		}
-		for (Variable v : ranges.keySet()) {
+		for (Percept v : ranges.keySet()) {
 			s +=v.getName() + " : " + ranges.get(v).toString() + "\n";
 		}
 		s += "Number of selections : " + nSelection + "\n";
@@ -336,8 +354,8 @@ public class Context extends SystemAgent{
 	 * Remove all the references in other agents and remove the agent from the scheduler.
 	 */
 	public void die() {
-		ArrayList<Variable> var = (ArrayList<Variable>) world.getAllAgentInstanceOf(Variable.class);
-		for (Variable v : var) {
+		ArrayList<Percept> var = (ArrayList<Percept>) world.getAllAgentInstanceOf(Percept.class);
+		for (Percept v : var) {
 			sendExpressMessage(null,MessageType.UNREGISTER,v);
 		}
 		ArrayList<Criterion> tempCrit = (ArrayList<Criterion>) world.getAllAgentInstanceOf(Criterion.class);
@@ -353,6 +371,14 @@ public class Context extends SystemAgent{
 			if (predictions.get(c) <= 0) n++;
 		}
 		return n;
+	}
+
+	public boolean isFirstTimePeriod() {
+		return firstTimePeriod;
+	}
+
+	public void setFirstTimePeriod(boolean firstTimePeriod) {
+		this.firstTimePeriod = firstTimePeriod;
 	}
 
 

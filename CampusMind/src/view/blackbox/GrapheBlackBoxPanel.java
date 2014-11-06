@@ -1,25 +1,38 @@
 package view.blackbox;
 
+import java.awt.AWTException;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Robot;
+import java.awt.event.InputEvent;
+import java.awt.event.MouseEvent;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
+import javax.swing.SwingUtilities;
+import javax.swing.event.MouseInputListener;
 
 import kernel.Config;
 
 import org.graphstream.graph.*;
 import org.graphstream.graph.implementations.*;
 import org.graphstream.ui.swingViewer.Viewer;
+import org.graphstream.ui.swingViewer.ViewerListener;
+import org.graphstream.ui.swingViewer.ViewerPipe;
 
 import agents.Agent;
+import agents.Percept;
+import agents.criterion.Criterion;
 import blackbox.BlackBox;
 import blackbox.BlackBoxAgent;
+import blackbox.Function;
 import blackbox.Input;
 
-public class GrapheBlackBoxPanel extends JPanel{
+public class GrapheBlackBoxPanel extends JPanel implements MouseInputListener, ViewerListener{
 	
 	Graph graph;
 	Viewer viewer;
@@ -32,7 +45,11 @@ public class GrapheBlackBoxPanel extends JPanel{
 	private JButton buttonShowName;
 	
 	private int viewMode = 0;
-
+	
+	/*Interaction with simulator*/
+	private ViewerPipe pipe;
+	private MouseEvent mouseEvent;
+	Boolean rightClick = false;
 
 	public GrapheBlackBoxPanel() {
 		setLayout(new BorderLayout());
@@ -162,8 +179,117 @@ public class GrapheBlackBoxPanel extends JPanel{
 		viewer = new Viewer(graph, Viewer.ThreadingModel.GRAPH_IN_SWING_THREAD);
 		viewer.addDefaultView(false);
 		viewer.enableAutoLayout();
+		viewer.getDefaultView().addMouseListener(this);
+		
+
+		pipe = viewer.newViewerPipe();
+        pipe.addViewerListener(this);
+        pipe.addSink(graph);
 
 		viewer.getDefaultView().setMinimumSize(new Dimension(400,400));
 		this.add(viewer.getDefaultView(),BorderLayout.CENTER);
+	}
+	
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		mouseEvent = e;
+		if(SwingUtilities.isRightMouseButton(e)){
+			rightClick = true;
+			Robot bot;
+			try {
+				bot = new Robot();
+				int mask = InputEvent.BUTTON1_DOWN_MASK;
+				bot.mousePress(mask);  
+				bot.mouseRelease(mask);  
+			} catch (AWTException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+   
+		}
+		pipe.pump();
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void buttonPushed(String id) {
+		System.out.println("node pushed : " + id);
+		
+		
+		if (rightClick) {
+			if (blackBox.getBlackBoxAgents().get(id) instanceof Input) {
+				popupInput(id);
+			}
+			
+			rightClick = false;
+		}		
+	}
+
+	@Override
+	public void buttonReleased(String arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void viewClosed(String arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public void popupInput(String id){
+		
+		JPopupMenu popup = new JPopupMenu("Input");
+		
+		JMenuItem itemX2 = new JMenuItem("x2");
+		itemX2.addActionListener(e -> {factorInput(2,id);});
+		itemX2.setIcon(Config.getIcon("pencil.png"));
+		popup.add(itemX2);
+		
+		JMenuItem itemDiv2 = new JMenuItem("/2");
+		itemDiv2.addActionListener(e -> {factorInput(0.5,id);});
+		itemDiv2.setIcon(Config.getIcon("pencil.png"));
+		popup.add(itemDiv2);
+		
+		popup.show(this, this.getX() + mouseEvent.getX(), this.getY() + mouseEvent.getY());
+	}
+	
+	private void factorInput(double factor, String id) {
+		((Input)blackBox.getBlackBoxAgents().get(id)).multValue(factor);
 	}
 }

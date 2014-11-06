@@ -19,7 +19,7 @@ import javax.swing.BoxLayout;
 import javax.swing.table.DefaultTableModel;
 
 import agents.SystemAgent;
-import agents.Variable;
+import agents.Percept;
 import agents.context.Context;
 import agents.controler.Controller;
 import agents.criterion.Criterion;
@@ -85,9 +85,9 @@ public class SystemPanel extends JPanel{
 				tableModel.insertRow(nCriterion+nVariable,data);
 
 			}
-			if (a instanceof Variable) {
+			if (a instanceof Percept) {
 				data[3] = a.getMessagesBin();
-				data[4] = ((Variable) a).getValue();
+				data[4] = ((Percept) a).getValue();
 				nVariable++;
 				tableModel.insertRow(nCriterion,data);
 			}
@@ -121,13 +121,11 @@ public class SystemPanel extends JPanel{
 
 
 	public World getWorld() {
-		
 		return world;
 	}
 
 
 	public void setWorld(World world) {
-		
 		this.world = world;
 	}
 	

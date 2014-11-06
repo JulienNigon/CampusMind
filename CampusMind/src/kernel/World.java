@@ -16,7 +16,7 @@ import blackbox.BlackBox;
 import blackbox.BlackBoxAgent;
 import blackbox.Input;
 import agents.SystemAgent;
-import agents.Variable;
+import agents.Percept;
 import agents.Agent;
 import agents.context.Context;
 import agents.controler.Controller;
@@ -69,7 +69,7 @@ public class World {
 		    
 		    // Initialize the sensor agents
 		    for (Element element : racine.getChild("StartingAgents").getChildren("Sensor")){
-		    	Variable s = new Variable(this);
+		    	Percept s = new Percept(this);
 		    	s.setName(element.getAttributeValue("Name"));
 		    	scheduler.registerAgent(s);	   
 		    	agents.put(s.getName(), s);
@@ -85,7 +85,7 @@ public class World {
 
 		    	scheduler.registerAgent(a);	   
 		    	agents.put(a.getName(), a);
-		    	((Variable) agents.get(element.getChild("CriticalVariable").getAttributeValue("Name"))).addTarget(a);
+		    	((Percept) agents.get(element.getChild("CriticalVariable").getAttributeValue("Name"))).addTarget(a);
 		    }
 		    
 		    //Initialize the controller agents

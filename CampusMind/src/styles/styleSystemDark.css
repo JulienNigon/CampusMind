@@ -1,0 +1,51 @@
+graph {
+    fill-color: black;
+}
+
+node { text-mode: hidden;
+	size: 15px;
+fill-color: #44F; stroke-mode: plain; stroke-width: 2px;
+  stroke-color: #CCF; shadow-mode: gradient-radial;
+   shadow-width: 10px; shadow-color: #EEF, #000; shadow-offset: 0px;
+ }
+
+
+node.Percept {
+	size: 25px;
+	fill-color: rgb(0,255,0), rgba(0,50,0,0);
+}
+
+node.Controller {
+	size: 25px;
+	fill-color: rgb(255,255,0), rgba(50,50,0,0);
+}
+
+node.Context {
+	fill-color: rgb(0,255,255), rgba(0,55,55,0);
+}
+
+node.Criterion {
+	size: 25px;
+	fill-color: rgb(255,0,0), rgba(55,0,0,0);
+}
+
+
+edge {
+visibility-mode: hidden;
+	shape: cubic-curve;
+    arrow-shape: arrow;
+    stroke-color: darkgrey;
+    size: 2px;
+    fill-color: black;
+    arrow-size: 3px, 2px;
+}
+
+edge.validContext {
+	visibility-mode: normal;
+
+	fill-color: #CCF;
+	}
+
+node:clicked {
+    fill-color: darkblue;
+}

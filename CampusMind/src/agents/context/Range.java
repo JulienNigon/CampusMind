@@ -6,16 +6,18 @@ public class Range {
 	private double end;
 	private double value;
 	private double oldValue;
-	public static final double mininimalRange = 1.0;
+	private double startingValue;  /*For creation of new contexts*/
+
+	public static final double mininimalRange = 0.25;
 	private final double percentFitness = 0.05;
 
 	
 	
 	
-	public Range(double start, double end) {
+	public Range(double start, double end, double extendedrangeatcreation) {
 		super();
-		this.start = start;
-		this.end = end;
+		this.start = start - Math.abs(extendedrangeatcreation * start);;
+		this.end = end + Math.abs(extendedrangeatcreation * end);
 	}
 	
 	public boolean isInRange (double value) {
@@ -52,11 +54,11 @@ public class Range {
 		//TODO +% is good?
 		if (Math.abs(oldValue-start) > Math.abs(oldValue-end)) {
 			end = oldValue 
-					/*+ percentFitness*(oldValue-end)*/;
+					+ percentFitness*(oldValue-end);
 		}
 		else {
 			start = oldValue
-					/*+ percentFitness*(oldValue-start)*/;
+					+ percentFitness*(oldValue-start);
 		}
 	}
 	
@@ -66,6 +68,22 @@ public class Range {
 	
 	public boolean isTooSmall() {
 		return (end - start) < mininimalRange;
+	}
+
+	public double getStartingValue() {
+		return startingValue;
+	}
+
+	public void setStartingValue(double startingValue) {
+		this.startingValue = startingValue;
+	}
+
+	public double getOldValue() {
+		return oldValue;
+	}
+
+	public void setOldValue(double oldValue) {
+		this.oldValue = oldValue;
 	}
 	
 	

@@ -31,7 +31,7 @@ import org.graphstream.ui.swingViewer.ViewerPipe;
 import view.system.paving.Panel1DPaving;
 import agents.Agent;
 import agents.SystemAgent;
-import agents.Variable;
+import agents.Percept;
 import agents.context.Context;
 import agents.criterion.Criterion;
 import blackbox.BlackBox;
@@ -56,6 +56,7 @@ public class GrapheSystemPanel extends JPanel implements ViewerListener, MouseIn
 	private JButton buttonDestroyContext;
 	private JButton buttonSoftStyle;
 	private JButton buttonStandardStyle;
+	private JButton buttonDarkStyle;
 	private JButton buttonEnableAutoLayout;
 	private JButton buttonDisableAutoLayout;
 
@@ -84,13 +85,18 @@ public class GrapheSystemPanel extends JPanel implements ViewerListener, MouseIn
 		
 		toolBar.addSeparator();
 		
-		buttonSoftStyle = new JButton(Config.getIcon("tag.png"));
+		buttonSoftStyle = new JButton(Config.getIcon("flag-white.png"));
 		buttonSoftStyle.addActionListener(e -> {setSoftStyle();});
 		toolBar.add(buttonSoftStyle);
 		
-		buttonStandardStyle = new JButton(Config.getIcon("tag.png"));
+		buttonStandardStyle = new JButton(Config.getIcon("flag-green.png"));
 		buttonStandardStyle.addActionListener(e -> {setStandardStyle();});
 		toolBar.add(buttonStandardStyle);
+		
+		buttonDarkStyle = new JButton(Config.getIcon("flag-black.png"));
+		buttonDarkStyle.addActionListener(e -> {setDarkStyle();});
+		buttonDarkStyle.setToolTipText("Switch to dark style.");
+		toolBar.add(buttonDarkStyle);
 		
 		toolBar.addSeparator();
 
@@ -127,6 +133,11 @@ public class GrapheSystemPanel extends JPanel implements ViewerListener, MouseIn
 	public void setStandardStyle() {
 		graph.removeAttribute("ui.stylesheet");
 		graph.addAttribute("ui.stylesheet", "url('file:/home/nigon/git/CampusMind/CampusMind/src/styles/styleSystem.css')");
+	}
+	
+	public void setDarkStyle() {
+		graph.removeAttribute("ui.stylesheet");
+		graph.addAttribute("ui.stylesheet", "url('file:/home/nigon/git/CampusMind/CampusMind/src/styles/styleSystemDark.css')");
 	}
 	
 	public void setSoftStyle() {
@@ -229,9 +240,11 @@ public class GrapheSystemPanel extends JPanel implements ViewerListener, MouseIn
 				if (a instanceof Context) {
 					if ( ((Context) a).checkRanges() == true) {
 						graph.getEdge(fullname).addAttribute("ui.class", "validContext");
+						graph.getEdge(fullname).addAttribute("layout.weight", 0.5);
 					}
 					else {
 						graph.getEdge(fullname).removeAttribute("ui.class");
+						graph.getEdge(fullname).addAttribute("layout.weight", 1);
 					}
 				}
 			}
@@ -304,6 +317,8 @@ public class GrapheSystemPanel extends JPanel implements ViewerListener, MouseIn
 		graph.addEdge("CA", "C", "A");
 		graph.addEdge("XY", "XXX", "YYY");**/
 
+		/*If we want to improve perf on display...*/
+		//graph.addAttribute("layout.stabilization-limit", 0.85);
 		
 		viewer = new Viewer(graph, Viewer.ThreadingModel.GRAPH_IN_SWING_THREAD);
 		viewer.addDefaultView(false);
@@ -333,7 +348,7 @@ public class GrapheSystemPanel extends JPanel implements ViewerListener, MouseIn
 		if (rightClick) {
 			if (world.getAgents().get(id) instanceof Criterion) {
 				popupCriterion(id);
-			} else if (world.getAgents().get(id) instanceof Variable) {
+			} else if (world.getAgents().get(id) instanceof Percept) {
 				popupPercept(id);
 			}
 			
@@ -348,15 +363,17 @@ public class GrapheSystemPanel extends JPanel implements ViewerListener, MouseIn
 		PanelCriterion pan = new PanelCriterion((Criterion) world.getAgents().get(id), world);
 		JFrame frame = new JFrame(id);
 		world.getScheduler().addScheduledItem(pan);
+        frame.setAlwaysOnTop(true);
 		frame.setContentPane(pan);
 		frame.setVisible(true);
 		frame.pack();
 	}
 	
 	private void startPanel1DPaving(String id) {
-		Panel1DPaving pan = new Panel1DPaving((Variable) world.getAgents().get(id), world);
+		Panel1DPaving pan = new Panel1DPaving((Percept) world.getAgents().get(id), world);
 		JFrame frame = new JFrame(id);
 		world.getScheduler().addScheduledItem(pan);
+        frame.setAlwaysOnTop(true);
 		frame.setContentPane(new JScrollPane(pan));
 		frame.setVisible(true);
 		frame.pack();

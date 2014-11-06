@@ -29,9 +29,10 @@ public enum CriticityType {
 		}
 	}
 	
+	//TODO
 	private double between0_100(double d) {
 		if (d < 0) return 0;
-		if (d > 100) return 100;
+		if (d > 10000) return 10000;
 		return d;
 	}
 }

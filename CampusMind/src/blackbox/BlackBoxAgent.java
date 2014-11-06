@@ -29,5 +29,7 @@ public abstract class BlackBoxAgent extends Agent{
 	public abstract double getValue();
 	
 	public abstract void fastPlay();
+
+
 	
 }

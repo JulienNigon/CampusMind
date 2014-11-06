@@ -5,7 +5,7 @@ node { size-mode: fit; shape: rounded-box; fill-color: white; stroke-mode: plain
 
 
 
-node.Variable {
+node.Percept {
 	fill-color: green;
 }
 

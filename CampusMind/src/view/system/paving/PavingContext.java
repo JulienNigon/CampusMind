@@ -21,7 +21,7 @@ public class PavingContext extends JJComponent{
 	
 	public PavingContext(JJPanel parent, double xx, double yy, Context context, double scale, Panel1DPaving paving, int index) {
 		super(parent, xx, 2 + (index*paving.heightPavingContext), (double)paving.heightPavingContext, (double)paving.heightPavingContext);
-		this.setDragable(true);
+	//	this.setDragable(true);
 		this.context = context;
 		this.scale = scale;
 		this.paving = paving;

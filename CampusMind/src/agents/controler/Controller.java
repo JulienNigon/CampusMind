@@ -9,7 +9,7 @@ import kernel.World;
 import blackbox.Input;
 import agents.Agent;
 import agents.SystemAgent;
-import agents.Variable;
+import agents.Percept;
 import agents.context.Context;
 import agents.criterion.Criterion;
 import agents.messages.Message;
@@ -29,9 +29,9 @@ public class Controller extends SystemAgent{
 	private boolean newActionPossible = true;
 	
 	/*Limit the effector capacity*/
-	private double maxAction = 1;
-	private double minAction = -1;
-	private double step = 0.01;
+	private double maxAction = 5;
+	private double minAction = -5;
+	private double step = 1;
 
 	public Controller(World world) {
 		super(world);
@@ -67,7 +67,7 @@ public class Controller extends SystemAgent{
 		if (oldCriticity.size() > 0) {			/*Let some time for initialisation*/
 			
 			if (contexts.size() > 0) selectBestContext();
-			if (bestContext != null && bestContext.getPredictionFor(criticalCriterion) <= 0) {
+			if (bestContext != null && (bestContext.getPredictionFor(criticalCriterion) < 0 || (bestContext.getPredictionFor(criticalCriterion) == 0 && criticity.get(criticalCriterion) == 0))) {
 
 				System.out.println(bestContext);
 				
@@ -88,11 +88,11 @@ public class Controller extends SystemAgent{
 			//		action = randomStep()*step;
 					action = selectNewAction();
 					if (newActionPossible) {
-						bestContext = null;
 						sendMessage(action, MessageType.VALUE, blackBoxInput);
 						Context context = new Context(world, this);
 						context.setName(String.valueOf(context.hashCode()));
 						world.startAgent(context);
+						bestContext = context;
 					} else {
 						newActionPossible = true;
 					}

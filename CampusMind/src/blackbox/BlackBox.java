@@ -10,7 +10,7 @@ import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 
 import agents.Agent;
-import agents.Variable;
+import agents.Percept;
 
 import kernel.Scheduler;
 

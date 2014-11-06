@@ -55,7 +55,7 @@ public class JTableRenderer_Agents extends DefaultTableCellRenderer {
 				while (!stack.isEmpty()) {
 					Message m = stack.pop();
 					Icon soloIcon = null;
-					if (m.getSender() instanceof Variable) {
+					if (m.getSender() instanceof Percept) {
 						soloIcon = Config.getIcon("status.png");
 					} else if  (m.getSender() instanceof Context) {
 						soloIcon = Config.getIcon("status-away.png");

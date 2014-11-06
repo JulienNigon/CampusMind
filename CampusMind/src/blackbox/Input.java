@@ -49,5 +49,7 @@ public class Input extends BlackBoxAgent{
 		
 	}
 
-	
+	public void multValue(double factor) {
+		value *= factor;
+	}
 }

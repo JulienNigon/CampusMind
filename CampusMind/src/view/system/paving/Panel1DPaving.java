@@ -5,12 +5,12 @@ import java.util.ArrayList;
 import view.animation.JJPanel;
 import view.system.ScheduledItem;
 import kernel.World;
-import agents.Variable;
+import agents.Percept;
 import agents.context.Context;
 
 public class Panel1DPaving extends JJPanel implements ScheduledItem{
 
-	private Variable variable;
+	private Percept variable;
 	private World world;
 	private ArrayList<Context> referencedContexts = new ArrayList<Context>();
 	private ArrayList<PavingContext> pavingContexts = new ArrayList<PavingContext>();
@@ -25,7 +25,7 @@ public class Panel1DPaving extends JJPanel implements ScheduledItem{
 	
 	private int nContext = 0;
 	
-	public Panel1DPaving(Variable variable, World world) {
+	public Panel1DPaving(Percept variable, World world) {
 		this.world = world;
 		this.variable = variable;
 		
@@ -48,13 +48,17 @@ public class Panel1DPaving extends JJPanel implements ScheduledItem{
 			min = contexts.get(0).getRanges().get(variable).getStart();
 			max = contexts.get(0).getRanges().get(variable).getEnd();
 			for (Context context : contexts) {
-				temp = context.getRanges().get(variable).getStart();
-				if (temp < min) {
-					min = temp;
-				}
-				temp = context.getRanges().get(variable).getEnd();
-				if (temp > max) {
-					max = temp;
+				
+				if (!context.isFirstTimePeriod())
+				{
+					temp = context.getRanges().get(variable).getStart();
+					if (temp < min) {
+						min = temp;
+					}
+					temp = context.getRanges().get(variable).getEnd();
+					if (temp > max) {
+						max = temp;
+					}
 				}
 			}
 		
@@ -150,12 +154,12 @@ public class Panel1DPaving extends JJPanel implements ScheduledItem{
 	}
 
 
-	public Variable getVariable() {
+	public Percept getVariable() {
 		return variable;
 	}
 
 
-	public void setVariable(Variable variable) {
+	public void setVariable(Percept variable) {
 		this.variable = variable;
 	}
 
